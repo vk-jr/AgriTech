@@ -542,4 +542,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get soilAnalysisComingSoon => 'मिट्टी विश्लेषण सुविधा जल्द आ रही है!';
+
+  @override
+  String get currentLocation => 'वर्तमान स्थान';
+
+  @override
+  String get locating => 'स्थान खोजा जा रहा है...';
 }

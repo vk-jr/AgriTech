@@ -553,4 +553,10 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get soilAnalysisComingSoon => 'മണ്ണ് വിശകലന സവിശേഷത ഉടൻ വരുന്നു!';
+
+  @override
+  String get currentLocation => 'നിലവിലെ സ്ഥാനം';
+
+  @override
+  String get locating => 'സ്ഥാനം കണ്ടെത്തുന്നു...';
 }

@@ -1125,6 +1125,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Soil analysis feature coming soon!'**
   String get soilAnalysisComingSoon;
+
+  /// No description provided for @currentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get currentLocation;
+
+  /// No description provided for @locating.
+  ///
+  /// In en, this message translates to:
+  /// **'Locating...'**
+  String get locating;
 }
 
 class _AppLocalizationsDelegate

@@ -170,5 +170,7 @@
   "satelliteFarmAnalysisDesc": "Get real-time satellite monitoring and AI-powered analysis of your farm. Monitor crop health, soil conditions, and get smart recommendations.",
   "exploreSatelliteAnalysis": "Explore Satellite Analysis",
   "weatherPredictionComingSoon": "Weather prediction feature coming soon!",
-  "soilAnalysisComingSoon": "Soil analysis feature coming soon!"
+  "soilAnalysisComingSoon": "Soil analysis feature coming soon!",
+  "currentLocation": "Current Location",
+  "locating": "Locating..."
 }

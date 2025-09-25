@@ -542,4 +542,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soilAnalysisComingSoon => 'Soil analysis feature coming soon!';
+
+  @override
+  String get currentLocation => 'Current Location';
+
+  @override
+  String get locating => 'Locating...';
 }

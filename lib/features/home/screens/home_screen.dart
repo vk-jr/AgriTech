@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Current Location',
+                      AppLocalizations.of(context)!.currentLocation,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppTheme.primaryGreen,
                             fontWeight: FontWeight.w500,
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      weatherProvider.currentLocation ?? 'Locating...',
+                      weatherProvider.currentLocation ?? AppLocalizations.of(context)!.locating,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),

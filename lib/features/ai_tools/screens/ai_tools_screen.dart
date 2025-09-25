@@ -114,15 +114,15 @@ class AIToolsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Main AI Tools',
+          AppLocalizations.of(context)!.mainAiTools,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'Crop Suggestion AI',
-          subtitle: 'Get personalized crop recommendations based on your soil, climate, and market conditions',
+          title: AppLocalizations.of(context)!.cropSuggestionAi,
+          subtitle: AppLocalizations.of(context)!.cropSuggestionAiDesc,
           icon: MdiIcons.sproutOutline,
           iconColor: AppTheme.primaryGreen,
           onTap: () => context.go('/ai-tools/crop-suggestion'),
@@ -137,7 +137,7 @@ class AIToolsScreen extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Popular',
+              AppLocalizations.of(context)!.popular,
               style: TextStyle(
                 color: AppTheme.primaryGreen,
                 fontSize: 10,
@@ -148,8 +148,8 @@ class AIToolsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'Plant Recommendation',
-          subtitle: 'Get personalized plant suggestions perfect for your conditions and small-scale growing',
+          title: AppLocalizations.of(context)!.plantRecommendation,
+          subtitle: AppLocalizations.of(context)!.plantRecommendationDesc,
           icon: MdiIcons.flowerOutline,
           iconColor: AppTheme.accentBrown,
           onTap: () => context.go('/ai-tools/plant-recommendation'),
@@ -164,7 +164,7 @@ class AIToolsScreen extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Smart',
+              AppLocalizations.of(context)!.smart,
               style: TextStyle(
                 color: AppTheme.accentBrown,
                 fontSize: 10,
@@ -175,8 +175,8 @@ class AIToolsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'Plant Doctor',
-          subtitle: 'Upload photos of diseased plants to get instant AI diagnosis and treatment recommendations',
+          title: AppLocalizations.of(context)!.plantDoctor,
+          subtitle: AppLocalizations.of(context)!.plantDoctorDesc2,
           icon: MdiIcons.medicalBag,
           iconColor: AppTheme.errorRed,
           onTap: () => context.go('/ai-tools/plant-doctor'),
@@ -191,7 +191,7 @@ class AIToolsScreen extends StatelessWidget {
               ),
             ),
             child: Text(
-              'New',
+              AppLocalizations.of(context)!.newLabel,
               style: TextStyle(
                 color: AppTheme.errorRed,
                 fontSize: 10,
@@ -209,23 +209,23 @@ class AIToolsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Additional Tools',
+          AppLocalizations.of(context)!.additionalTools,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'AR Plant Layout',
-          subtitle: 'Visualize crop layouts in your space using augmented reality',
+          title: AppLocalizations.of(context)!.arPlantLayout,
+          subtitle: AppLocalizations.of(context)!.arPlantLayoutDesc,
           icon: MdiIcons.cubeOutline,
           iconColor: AppTheme.skyBlue,
           onTap: () => context.go('/ai-tools/ar-view'),
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'Weather Prediction',
-          subtitle: 'AI-powered weather forecasts for better farming decisions',
+          title: AppLocalizations.of(context)!.weatherPrediction,
+          subtitle: AppLocalizations.of(context)!.weatherPredictionDesc,
           icon: MdiIcons.weatherPartlyCloudy,
           iconColor: AppTheme.earthYellow,
           onTap: () => context.go('/weather-prediction'),
@@ -233,14 +233,14 @@ class AIToolsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'Soil Analysis',
-          subtitle: 'Upload soil photos for AI-powered nutrient analysis',
+          title: AppLocalizations.of(context)!.soilAnalysisTitle,
+          subtitle: AppLocalizations.of(context)!.soilAnalysisDesc,
           icon: MdiIcons.earth,
           iconColor: AppTheme.accentBrown,
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Soil analysis feature coming soon!'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.soilAnalysisComingSoon),
               ),
             );
           },
@@ -255,7 +255,7 @@ class AIToolsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'More Features',
+          AppLocalizations.of(context)!.moreFeatures,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -276,7 +276,7 @@ class AIToolsScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Satellite Farm Analysis',
+                      AppLocalizations.of(context)!.satelliteFarmAnalysis,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppTheme.skyBlue,
@@ -292,7 +292,7 @@ class AIToolsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Get real-time satellite monitoring and AI-powered analysis of your farm. Monitor crop health, soil conditions, and get smart recommendations.',
+                AppLocalizations.of(context)!.satelliteFarmAnalysisDesc,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -307,7 +307,7 @@ class AIToolsScreen extends StatelessWidget {
                         backgroundColor: AppTheme.skyBlue,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Explore Satellite Analysis'),
+                      child: Text(AppLocalizations.of(context)!.exploreSatelliteAnalysis),
                     ),
                   ),
                 ],
