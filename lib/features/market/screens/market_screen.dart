@@ -229,7 +229,7 @@ class _MarketScreenState extends State<MarketScreen> {
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.75,
+        childAspectRatio: 0.8,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),
@@ -314,35 +314,47 @@ class _MarketScreenState extends State<MarketScreen> {
           Expanded(
             flex: 2,
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    product.name,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      product.name,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 14),
-                      const SizedBox(width: 2),
-                      Text(
-                        '${product.rating}',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '(${product.reviewCount})',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
+                  const SizedBox(height: 2),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 12),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${product.rating}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 10,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 2),
+                        Flexible(
+                          child: Text(
+                            '(${product.reviewCount})',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                              fontSize: 10,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   Row(
@@ -350,6 +362,7 @@ class _MarketScreenState extends State<MarketScreen> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             if (product.discount > 0) ...[
                               Text(
@@ -357,26 +370,32 @@ class _MarketScreenState extends State<MarketScreen> {
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   decoration: TextDecoration.lineThrough,
                                   color: Colors.grey[600],
+                                  fontSize: 9,
                                 ),
                               ),
                             ],
-                            Text(
-                              '₹${product.discountedPrice.toStringAsFixed(0)}/${product.unit}',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
+                            Flexible(
+                              child: Text(
+                                '₹${product.discountedPrice.toStringAsFixed(0)}/${product.unit}',
+                                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 11,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.add_shopping_cart, size: 20),
+                        icon: const Icon(Icons.add_shopping_cart, size: 16),
                         onPressed: () => _addToCart(context, product, provider),
                         style: IconButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.primary,
                           foregroundColor: Colors.white,
-                          minimumSize: const Size(32, 32),
+                          minimumSize: const Size(28, 28),
+                          padding: EdgeInsets.zero,
                         ),
                       ),
                     ],
