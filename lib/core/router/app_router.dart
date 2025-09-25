@@ -17,6 +17,7 @@ import '../../features/community/screens/community_screen.dart';
 import '../../features/community/screens/forum_post_detail_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/profile/screens/settings_screen.dart';
+import '../../features/weather/screens/weather_prediction_screen.dart';
 import '../utils/page_transitions.dart';
 
 class AppRouter {
@@ -188,6 +189,17 @@ class AppRouter {
             ],
           ),
         ],
+      ),
+      
+      // Weather Prediction Route (outside shell for full screen)
+      GoRoute(
+        path: '/weather-prediction',
+        name: 'weather-prediction',
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          const WeatherPredictionScreen(),
+          state,
+          name: 'weather-prediction',
+        ),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

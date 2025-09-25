@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../providers/dashboard_provider.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../weather/providers/weather_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../../../core/theme/app_theme.dart';
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DashboardProvider>().loadDashboardData();
+      context.read<WeatherProvider>().getCurrentLocationAndWeather();
     });
   }
 
@@ -97,65 +99,98 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildWelcomeSection(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
+    return Consumer2<AuthProvider, WeatherProvider>(
+      builder: (context, authProvider, weatherProvider, child) {
         final user = authProvider.currentUser;
         if (user == null) return const SizedBox.shrink();
 
         return CustomCard(
           backgroundColor: AppTheme.lightGreen.withOpacity(0.1),
-          child: Row(
+          child: Column(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: AppTheme.primaryGreen,
-                child: Text(
-                  user.name.split(' ').map((n) => n[0]).take(2).join(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome back, ${user.name.split(' ')[0]}!',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Level ${user.gamificationStats.level} • ${user.gamificationStats.totalXP} XP',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppTheme.primaryGreen,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                    if (user.location != null) ...[
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            size: 16,
-                            color: Colors.grey[600],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            user.location!,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: AppTheme.primaryGreen,
+                    child: Text(
+                      user.name.split(' ').map((n) => n[0]).take(2).join(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome back, ${user.name.split(' ')[0]}!',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Level ${user.gamificationStats.level} • ${user.gamificationStats.totalXP} XP',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.primaryGreen,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Location and Weather Info
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            weatherProvider.currentLocation ?? user.location ?? 'Getting location...',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (weatherProvider.currentWeather != null) ...[
+                    const SizedBox(width: 16),
+                    Row(
+                      children: [
+                        Text(
+                          weatherProvider.getWeatherIcon(
+                            weatherProvider.currentWeather!['weather'][0]['main'],
+                          ),
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          weatherProvider.getTemperature(),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryGreen,
+                              ),
+                        ),
+                      ],
+                    ),
                   ],
-                ),
+                ],
               ),
             ],
           ),

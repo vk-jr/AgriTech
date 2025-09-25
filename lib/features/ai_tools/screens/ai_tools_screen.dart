@@ -227,14 +227,8 @@ class AIToolsScreen extends StatelessWidget {
           subtitle: 'AI-powered weather forecasts for better farming decisions',
           icon: MdiIcons.weatherPartlyCloudy,
           iconColor: AppTheme.earthYellow,
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Weather prediction feature coming soon!'),
-              ),
-            );
-          },
-          isEnabled: false,
+          onTap: () => context.go('/weather-prediction'),
+          isEnabled: true,
         ),
         const SizedBox(height: 12),
         FeatureCard(

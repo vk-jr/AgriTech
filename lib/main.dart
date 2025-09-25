@@ -12,6 +12,7 @@ import 'features/ai_tools/providers/plant_doctor_provider.dart';
 import 'features/market/providers/market_provider.dart';
 import 'features/community/providers/community_provider.dart';
 import 'features/profile/providers/profile_provider.dart';
+import 'features/weather/providers/weather_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,7 @@ class AgriTechApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MarketProvider()),
         ChangeNotifierProvider(create: (_) => CommunityProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => WeatherProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
