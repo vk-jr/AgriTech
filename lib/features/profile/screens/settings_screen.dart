@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../../../core/providers/theme_provider.dart';
+import '../../../core/providers/localization_provider.dart';
 import '../providers/profile_provider.dart';
 import '../../../core/models/profile_model.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,15 +21,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(AppLocalizations.of(context)!.settings),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, provider, child) {
           if (provider.userProfile == null) {
-            return const Center(
-              child: Text('Please log in to access settings'),
+            return Center(
+              child: Text(AppLocalizations.of(context)!.pleaseLoginToAccessSettings),
             );
           }
 
@@ -58,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Notifications',
+            AppLocalizations.of(context)!.notifications,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -66,8 +68,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           
           _buildSwitchTile(
-            'Enable Notifications',
-            'Receive all notifications',
+            AppLocalizations.of(context)!.enableNotifications,
+            AppLocalizations.of(context)!.receiveAllNotifications,
             preferences.notificationsEnabled,
             (value) => _updateNotificationSetting('general', value),
           ),
@@ -75,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           
           Text(
-            'Notification Types',
+            AppLocalizations.of(context)!.notificationTypes,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -83,43 +85,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 8),
           
           _buildSwitchTile(
-            'New Posts',
-            'Get notified about new community posts',
+            AppLocalizations.of(context)!.newPosts,
+            AppLocalizations.of(context)!.newPostsDesc,
             notifications.newPosts,
             (value) => _updateNotificationSetting('newPosts', value),
           ),
           
           _buildSwitchTile(
-            'Comments',
-            'Get notified when someone comments on your posts',
+            AppLocalizations.of(context)!.comments,
+            AppLocalizations.of(context)!.commentsDesc,
             notifications.comments,
             (value) => _updateNotificationSetting('comments', value),
           ),
           
           _buildSwitchTile(
-            'Likes',
-            'Get notified when someone likes your content',
+            AppLocalizations.of(context)!.likes,
+            AppLocalizations.of(context)!.likesDesc,
             notifications.likes,
             (value) => _updateNotificationSetting('likes', value),
           ),
           
           _buildSwitchTile(
-            'Orders',
-            'Get notified about order updates',
+            AppLocalizations.of(context)!.orders,
+            AppLocalizations.of(context)!.ordersDesc,
             notifications.orders,
             (value) => _updateNotificationSetting('orders', value),
           ),
           
           _buildSwitchTile(
-            'Weather Alerts',
-            'Receive weather warnings and alerts',
+            AppLocalizations.of(context)!.weatherAlerts,
+            AppLocalizations.of(context)!.weatherAlertsDesc,
             notifications.weatherAlerts,
             (value) => _updateNotificationSetting('weatherAlerts', value),
           ),
           
           _buildSwitchTile(
-            'Market Updates',
-            'Get notified about market price changes',
+            AppLocalizations.of(context)!.marketUpdates,
+            AppLocalizations.of(context)!.marketUpdatesDesc,
             notifications.marketUpdates,
             (value) => _updateNotificationSetting('marketUpdates', value),
           ),
@@ -129,8 +131,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAppSettings(BuildContext context, ProfileProvider provider) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
+    return Consumer2<ThemeProvider, LocalizationProvider>(
+      builder: (context, themeProvider, localizationProvider, child) {
         final preferences = provider.userProfile!.preferences;
 
         return CustomCard(
@@ -139,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'App Settings',
+                AppLocalizations.of(context)!.appSettings,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -151,39 +153,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
               
               const Divider(),
               
-              _buildDropdownTile(
-                'Language',
-                'App language',
-                preferences.language,
-                ['en', 'hi', 'mr'],
-                ['English', 'Hindi', 'Marathi'],
-                (value) => _updateAppSetting('language', value),
+              _buildLanguageDropdownTile(
+                context,
+                localizationProvider,
               ),
               
               _buildDropdownTile(
-                'Currency',
-                'Display currency',
+                AppLocalizations.of(context)!.currency,
+                AppLocalizations.of(context)!.displayCurrency,
                 preferences.currency,
                 ['INR', 'USD', 'EUR'],
-                ['Indian Rupee (₹)', 'US Dollar (\$)', 'Euro (€)'],
+                [AppLocalizations.of(context)!.indianRupee, AppLocalizations.of(context)!.usDollar, AppLocalizations.of(context)!.euro],
                 (value) => _updateAppSetting('currency', value),
               ),
               
               _buildDropdownTile(
-                'Temperature Unit',
-                'Temperature display',
+                AppLocalizations.of(context)!.temperatureUnit,
+                AppLocalizations.of(context)!.temperatureDisplay,
                 preferences.temperatureUnit,
                 ['celsius', 'fahrenheit'],
-                ['Celsius (°C)', 'Fahrenheit (°F)'],
+                [AppLocalizations.of(context)!.celsius, AppLocalizations.of(context)!.fahrenheit],
                 (value) => _updateAppSetting('temperatureUnit', value),
               ),
               
               _buildDropdownTile(
-                'Measurement Unit',
-                'Distance and area measurements',
+                AppLocalizations.of(context)!.measurementUnit,
+                AppLocalizations.of(context)!.measurementUnitDesc,
                 preferences.measurementUnit,
                 ['metric', 'imperial'],
-                ['Metric (km, hectares)', 'Imperial (miles, acres)'],
+                [AppLocalizations.of(context)!.metric, AppLocalizations.of(context)!.imperial],
                 (value) => _updateAppSetting('measurementUnit', value),
               ),
             ],
@@ -198,7 +196,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Theme',
+          AppLocalizations.of(context)!.theme,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -208,8 +206,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // Light Theme Option
         _buildThemeOption(
           context,
-          'Light Theme',
-          'Use light colors and white background',
+          AppLocalizations.of(context)!.lightTheme,
+          AppLocalizations.of(context)!.lightThemeDesc,
           Icons.light_mode,
           themeProvider.isLightMode,
           () => themeProvider.setLightTheme(),
@@ -218,8 +216,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // Dark Theme Option
         _buildThemeOption(
           context,
-          'Dark Theme',
-          'Use dark colors and black background',
+          AppLocalizations.of(context)!.darkTheme,
+          AppLocalizations.of(context)!.darkThemeDesc,
           Icons.dark_mode,
           themeProvider.isDarkMode,
           () => themeProvider.setDarkTheme(),
@@ -228,8 +226,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // System Theme Option
         _buildThemeOption(
           context,
-          'System Theme',
-          'Follow your device theme settings',
+          AppLocalizations.of(context)!.systemTheme,
+          AppLocalizations.of(context)!.systemThemeDesc,
           Icons.settings_system_daydream,
           themeProvider.isSystemMode,
           () => themeProvider.setSystemTheme(),
@@ -283,7 +281,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Privacy & Security',
+            AppLocalizations.of(context)!.privacySecurity,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -291,15 +289,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           
           _buildSwitchTile(
-            'Profile Visibility',
-            'Make your profile visible to other users',
+            AppLocalizations.of(context)!.profileVisibility,
+            AppLocalizations.of(context)!.profileVisibilityDesc,
             preferences.profileVisibility,
             (value) => _updatePrivacySetting('profileVisibility', value),
           ),
           
           _buildSwitchTile(
-            'Location Sharing',
-            'Share your location for better recommendations',
+            AppLocalizations.of(context)!.locationSharing,
+            AppLocalizations.of(context)!.locationSharingDesc,
             preferences.locationSharing,
             (value) => _updatePrivacySetting('locationSharing', value),
           ),
@@ -307,22 +305,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           
           _buildActionTile(
-            'Change Password',
-            'Update your account password',
+            AppLocalizations.of(context)!.changePassword,
+            AppLocalizations.of(context)!.changePasswordDesc,
             Icons.lock_outline,
             _changePassword,
           ),
           
           _buildActionTile(
-            'Privacy Policy',
-            'Read our privacy policy',
+            AppLocalizations.of(context)!.privacyPolicy,
+            AppLocalizations.of(context)!.privacyPolicyDesc,
             Icons.privacy_tip_outlined,
             _showPrivacyPolicy,
           ),
           
           _buildActionTile(
-            'Terms of Service',
-            'Read our terms of service',
+            AppLocalizations.of(context)!.termsOfService,
+            AppLocalizations.of(context)!.termsOfServiceDesc,
             Icons.description_outlined,
             _showTermsOfService,
           ),
@@ -338,7 +336,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Account',
+            AppLocalizations.of(context)!.account,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -346,15 +344,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           
           _buildActionTile(
-            'Export Data',
-            'Download your account data',
+            AppLocalizations.of(context)!.exportData,
+            AppLocalizations.of(context)!.exportDataDesc,
             Icons.download_outlined,
             _exportData,
           ),
           
           _buildActionTile(
-            'Clear Cache',
-            'Free up storage space',
+            AppLocalizations.of(context)!.clearCache,
+            AppLocalizations.of(context)!.clearCacheDesc,
             Icons.cleaning_services_outlined,
             _clearCache,
           ),
@@ -362,7 +360,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           
           CustomButton(
-            text: 'Logout',
+            text: AppLocalizations.of(context)!.logout,
             type: ButtonType.secondary,
             width: double.infinity,
             onPressed: () => _logout(context, provider),
@@ -371,7 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 8),
           
           CustomButton(
-            text: 'Delete Account',
+            text: AppLocalizations.of(context)!.deleteAccount,
             backgroundColor: Colors.red,
             width: double.infinity,
             onPressed: () => _deleteAccount(context, provider),
@@ -388,7 +386,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About',
+            AppLocalizations.of(context)!.about,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -396,22 +394,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
           
           _buildActionTile(
-            'Help & Support',
-            'Get help or contact support',
+            AppLocalizations.of(context)!.helpSupport,
+            AppLocalizations.of(context)!.helpSupportDesc,
             Icons.help_outline,
             _showHelp,
           ),
           
           _buildActionTile(
-            'Rate App',
-            'Rate us on the app store',
+            AppLocalizations.of(context)!.rateApp,
+            AppLocalizations.of(context)!.rateAppDesc,
             Icons.star_outline,
             _rateApp,
           ),
           
           _buildActionTile(
-            'Share App',
-            'Share with friends and family',
+            AppLocalizations.of(context)!.shareApp,
+            AppLocalizations.of(context)!.shareAppDesc,
             Icons.share_outlined,
             _shareApp,
           ),
@@ -422,21 +420,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               children: [
                 Text(
-                  'AgriTech App',
+                  AppLocalizations.of(context)!.appTitle,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Version 1.0.0 (Build 1)',
+                  AppLocalizations.of(context)!.version,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey[600],
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '© 2024 AgriTech Solutions',
+                  AppLocalizations.of(context)!.copyright,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey[600],
                   ),
@@ -456,6 +454,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
+      ),
+      contentPadding: EdgeInsets.zero,
+    );
+  }
+
+  Widget _buildLanguageDropdownTile(
+    BuildContext context,
+    LocalizationProvider localizationProvider,
+  ) {
+    return ListTile(
+      title: Text(AppLocalizations.of(context)!.language),
+      subtitle: Text(AppLocalizations.of(context)!.appLanguage),
+      trailing: DropdownButton<String>(
+        value: localizationProvider.currentLanguageCode,
+        items: localizationProvider.supportedLanguageCodes.map((code) {
+          String displayName;
+          switch (code) {
+            case 'en':
+              displayName = AppLocalizations.of(context)!.english;
+              break;
+            case 'hi':
+              displayName = AppLocalizations.of(context)!.hindi;
+              break;
+            case 'ml':
+              displayName = AppLocalizations.of(context)!.malayalam;
+              break;
+            default:
+              displayName = code;
+          }
+          return DropdownMenuItem<String>(
+            value: code,
+            child: Text(displayName),
+          );
+        }).toList(),
+        onChanged: (value) {
+          if (value != null) {
+            localizationProvider.setLanguage(value);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${AppLocalizations.of(context)!.language} ${AppLocalizations.of(context)!.updatedTo} $value'),
+              ),
+            );
+          }
+        },
       ),
       contentPadding: EdgeInsets.zero,
     );
@@ -500,7 +542,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _updateNotificationSetting(String setting, bool value) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$setting notification ${value ? 'enabled' : 'disabled'}'),
+        content: Text('$setting notification ${value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled}'),
       ),
     );
   }
@@ -508,7 +550,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _updateAppSetting(String setting, dynamic value) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$setting updated to $value'),
+        content: Text('$setting ${AppLocalizations.of(context)!.updatedTo} $value'),
       ),
     );
   }
@@ -516,7 +558,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _updatePrivacySetting(String setting, bool value) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$setting ${value ? 'enabled' : 'disabled'}'),
+        content: Text('$setting ${value ? AppLocalizations.of(context)!.enabled : AppLocalizations.of(context)!.disabled}'),
       ),
     );
   }
@@ -525,12 +567,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Change Password'),
-        content: const Text('Password change feature will be implemented in the full version.'),
+        title: Text(AppLocalizations.of(context)!.changePasswordDialogTitle),
+        content: Text(AppLocalizations.of(context)!.changePasswordDialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),
@@ -539,24 +581,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showPrivacyPolicy() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening privacy policy...'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.openingPrivacyPolicy),
       ),
     );
   }
 
   void _showTermsOfService() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening terms of service...'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.openingTermsOfService),
       ),
     );
   }
 
   void _exportData() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Preparing data export...'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.preparingDataExport),
       ),
     );
   }
@@ -565,23 +607,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Cache'),
-        content: const Text('This will clear all cached data. Are you sure?'),
+        title: Text(AppLocalizations.of(context)!.clearCacheDialogTitle),
+        content: Text(AppLocalizations.of(context)!.clearCacheDialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Cache cleared successfully'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cacheClearedSuccessfully),
                 ),
               );
             },
-            child: const Text('Clear'),
+            child: Text(AppLocalizations.of(context)!.clear),
           ),
         ],
       ),
@@ -592,12 +634,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(AppLocalizations.of(context)!.logoutDialogTitle),
+        content: Text(AppLocalizations.of(context)!.logoutDialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -607,7 +649,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context.go('/login');
               }
             },
-            child: const Text('Logout'),
+            child: Text(AppLocalizations.of(context)!.logout),
           ),
         ],
       ),
@@ -618,14 +660,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Account'),
-        content: const Text(
-          'This action cannot be undone. All your data will be permanently deleted. Are you sure?',
-        ),
+        title: Text(AppLocalizations.of(context)!.deleteAccountDialogTitle),
+        content: Text(AppLocalizations.of(context)!.deleteAccountDialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -635,14 +675,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (success && mounted) {
                 context.go('/login');
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Account deleted successfully'),
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.accountDeletedSuccessfully),
                     backgroundColor: Colors.red,
                   ),
                 );
               }
             },
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -651,24 +691,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showHelp() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening help center...'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.openingHelpCenter),
       ),
     );
   }
 
   void _rateApp() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Opening app store...'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.openingAppStore),
       ),
     );
   }
 
   void _shareApp() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Sharing app...'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.sharingApp),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final Widget child;
@@ -158,23 +159,23 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                 items: [
                   BottomNavigationBarItem(
                     icon: _buildNavIcon(Icons.home_outlined, Icons.home, 0),
-                    label: 'Home',
+                    label: AppLocalizations.of(context)!.home,
                   ),
                   BottomNavigationBarItem(
                     icon: _buildNavIcon(MdiIcons.brain, MdiIcons.brain, 1),
-                    label: 'AI Tools',
+                    label: AppLocalizations.of(context)!.aiTools,
                   ),
                   BottomNavigationBarItem(
                     icon: _buildNavIcon(MdiIcons.storeOutline, MdiIcons.store, 2),
-                    label: 'Market',
+                    label: AppLocalizations.of(context)!.market,
                   ),
                   BottomNavigationBarItem(
                     icon: _buildNavIcon(MdiIcons.forumOutline, MdiIcons.forum, 3),
-                    label: 'Community',
+                    label: AppLocalizations.of(context)!.community,
                   ),
                   BottomNavigationBarItem(
                     icon: _buildNavIcon(Icons.person_outline, Icons.person, 4),
-                    label: 'Profile',
+                    label: AppLocalizations.of(context)!.profile,
                   ),
                 ],
               ),

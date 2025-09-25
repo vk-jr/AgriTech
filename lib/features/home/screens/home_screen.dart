@@ -8,6 +8,7 @@ import '../../auth/providers/auth_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -65,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppTheme.primaryGreen,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
-          'AgriTech Dashboard',
+          AppLocalizations.of(context)!.agritechDashboard,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -124,14 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome back, ${user.name.split(' ')[0]}!',
+                      AppLocalizations.of(context)!.welcomeBack(user.name.split(' ')[0]),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Level ${user.gamificationStats.level} • ${user.gamificationStats.totalXP} XP',
+                      '${AppLocalizations.of(context)!.level} ${user.gamificationStats.level} • ${user.gamificationStats.totalXP} XP',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: AppTheme.primaryGreen,
                             fontWeight: FontWeight.w500,
@@ -178,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Farm Overview',
+                AppLocalizations.of(context)!.farmOverview,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -193,25 +194,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisSpacing: 8,
                 children: [
                   StatCard(
-                    title: 'Active Crops',
+                    title: AppLocalizations.of(context)!.activeCrops,
                     value: '${stats.activeCrops}',
                     icon: MdiIcons.sprout,
                     color: AppTheme.primaryGreen,
                   ),
                   StatCard(
-                    title: 'Total Yield',
+                    title: AppLocalizations.of(context)!.totalYield,
                     value: '${stats.totalYield}T',
                     icon: MdiIcons.weight,
                     color: AppTheme.earthYellow,
                   ),
                   StatCard(
-                    title: 'Monthly Revenue',
+                    title: AppLocalizations.of(context)!.monthlyRevenue,
                     value: '₹${(stats.monthlyRevenue / 1000).toStringAsFixed(0)}K',
                     icon: MdiIcons.currencyInr,
                     color: AppTheme.lightGreen,
                   ),
                   StatCard(
-                    title: 'Water Saved',
+                    title: AppLocalizations.of(context)!.waterSaved,
                     value: '${stats.waterSaved}L',
                     icon: MdiIcons.waterOutline,
                     color: AppTheme.skyBlue,
@@ -244,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Alerts & Notifications',
+                    AppLocalizations.of(context)!.alertsNotifications,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -253,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       // TODO: Show all alerts
                     },
-                    child: const Text('View All'),
+                    child: Text(AppLocalizations.of(context)!.viewAll),
                   ),
                 ],
               ),

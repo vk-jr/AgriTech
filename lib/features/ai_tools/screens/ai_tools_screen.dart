@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../../shared/widgets/custom_card.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AIToolsScreen extends StatelessWidget {
   const AIToolsScreen({super.key});
@@ -13,7 +14,7 @@ class AIToolsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: const Text('AI Tools'),
+        title: Text(AppLocalizations.of(context)!.aiTools),
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
       ),
@@ -54,7 +55,7 @@ class AIToolsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'AI-Powered Agriculture',
+                      AppLocalizations.of(context)!.aiPoweredAgriculture,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppTheme.primaryGreen,
@@ -62,7 +63,7 @@ class AIToolsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Leverage artificial intelligence to make smarter farming decisions',
+                      AppLocalizations.of(context)!.aiDescription,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Colors.grey[700],
                           ),
@@ -93,7 +94,7 @@ class AIToolsScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Tip: Take clear, well-lit photos for better AI analysis results',
+                    AppLocalizations.of(context)!.aiTip,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[800],
                           fontWeight: FontWeight.w500,

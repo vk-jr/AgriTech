@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/providers/theme_provider.dart';
+import 'core/providers/localization_provider.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/home/providers/dashboard_provider.dart';
 import 'features/ai_tools/providers/crop_suggestion_provider.dart';
@@ -12,6 +14,7 @@ import 'features/ai_tools/providers/plant_doctor_provider.dart';
 import 'features/market/providers/market_provider.dart';
 import 'features/community/providers/community_provider.dart';
 import 'features/profile/providers/profile_provider.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,19 +23,31 @@ void main() async {
   final themeProvider = ThemeProvider();
   await themeProvider.initializeTheme();
   
-  runApp(AgriTechApp(themeProvider: themeProvider));
+  // Initialize localization provider
+  final localizationProvider = LocalizationProvider();
+  
+  runApp(AgriTechApp(
+    themeProvider: themeProvider,
+    localizationProvider: localizationProvider,
+  ));
 }
 
 class AgriTechApp extends StatelessWidget {
   final ThemeProvider themeProvider;
+  final LocalizationProvider localizationProvider;
   
-  const AgriTechApp({super.key, required this.themeProvider});
+  const AgriTechApp({
+    super.key, 
+    required this.themeProvider,
+    required this.localizationProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: themeProvider),
+        ChangeNotifierProvider.value(value: localizationProvider),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => CropSuggestionProvider()),
@@ -41,14 +56,22 @@ class AgriTechApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CommunityProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
+      child: Consumer2<ThemeProvider, LocalizationProvider>(
+        builder: (context, themeProvider, localizationProvider, child) {
           return MaterialApp.router(
             title: 'AgriTech App',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.materialThemeMode,
+            locale: localizationProvider.currentLocale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: LocalizationProvider.supportedLocales,
             routerConfig: AppRouter.router,
           );
         },
