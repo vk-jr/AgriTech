@@ -1,5 +1,19 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../../../core/models/crop_model.dart';
+
+class ChatMessage {
+  final String content;
+  final bool isUser;
+  final DateTime timestamp;
+
+  ChatMessage({
+    required this.content,
+    required this.isUser,
+    required this.timestamp,
+  });
+}
 
 class CropSuggestionProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -14,6 +28,7 @@ class CropSuggestionProvider extends ChangeNotifier {
   double _budget = 0.0;
   bool _isOrganicPreferred = false;
   List<String> _marketDemand = [];
+  List<ChatMessage> _chatMessages = [];
 
   bool get isLoading => _isLoading;
   List<CropSuggestion> get suggestions => _suggestions;
@@ -26,6 +41,7 @@ class CropSuggestionProvider extends ChangeNotifier {
   double get budget => _budget;
   bool get isOrganicPreferred => _isOrganicPreferred;
   List<String> get marketDemand => _marketDemand;
+  List<ChatMessage> get chatMessages => _chatMessages;
 
   void updateSoilType(String value) {
     _soilType = value;
@@ -77,14 +93,102 @@ class CropSuggestionProvider extends ChangeNotifier {
     _setError(null);
 
     try {
-      // Simulate AI API call
-      await Future.delayed(const Duration(seconds: 3));
+      // Add user input summary to chat
+      String userSummary = _buildUserInputSummary();
+      _chatMessages.add(ChatMessage(
+        content: userSummary,
+        isUser: true,
+        timestamp: DateTime.now(),
+      ));
+      notifyListeners();
+
+      // Send data to webhook
+      final response = await _sendDataToWebhook();
       
-      _suggestions = _generateMockSuggestions();
+      if (response != null) {
+        // Add webhook response to chat
+        _chatMessages.add(ChatMessage(
+          content: response,
+          isUser: false,
+          timestamp: DateTime.now(),
+        ));
+      }
+      
       _setLoading(false);
     } catch (e) {
       _setError('Failed to get crop suggestions. Please try again.');
       _setLoading(false);
+    }
+  }
+
+  String _buildUserInputSummary() {
+    List<String> details = [];
+    
+    if (_soilType.isNotEmpty) details.add("Soil: $_soilType");
+    if (_climate.isNotEmpty) details.add("Climate: $_climate");
+    if (_location.isNotEmpty) details.add("Location: $_location");
+    if (_landSize > 0) details.add("Land Size: $_landSize acres");
+    if (_budget > 0) details.add("Budget: ₹$_budget");
+    if (_isOrganicPreferred) details.add("Prefers organic farming");
+    
+    return "Looking for crop recommendations with:\n${details.join('\n')}";
+  }
+
+  Future<String?> _sendDataToWebhook() async {
+    try {
+      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook-test/cropAssistant';
+      
+      final requestData = {
+        'soilType': _soilType,
+        'climate': _climate,
+        'location': _location,
+        'landSize': _landSize,
+        'budget': _budget,
+        'isOrganicPreferred': _isOrganicPreferred,
+        'marketDemand': _marketDemand,
+      };
+
+      if (kDebugMode) {
+        print('Sending crop data to webhook: $webhookUrl');
+        print('Request data: ${json.encode(requestData)}');
+      }
+
+      final response = await http.post(
+        Uri.parse(webhookUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = response.body;
+        if (kDebugMode) {
+          print('Data successfully sent to webhook');
+          print('Response: $responseBody');
+        }
+        
+        // Parse the JSON response
+        try {
+          final jsonResponse = json.decode(responseBody);
+          if (jsonResponse['Result'] != null) {
+            return jsonResponse['Result'].toString();
+          }
+          return responseBody;
+        } catch (e) {
+          return responseBody;
+        }
+      } else {
+        if (kDebugMode) {
+          print('Failed to send data to webhook. Status code: ${response.statusCode}');
+        }
+        return 'Failed to get crop recommendations. Please try again.';
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error sending data to webhook: $e');
+      }
+      return 'Error occurred while getting recommendations.';
     }
   }
 
@@ -228,6 +332,7 @@ class CropSuggestionProvider extends ChangeNotifier {
   void clearSuggestions() {
     _suggestions = [];
     _errorMessage = null;
+    _chatMessages.clear();
     notifyListeners();
   }
 
@@ -241,6 +346,7 @@ class CropSuggestionProvider extends ChangeNotifier {
     _marketDemand = [];
     _suggestions = [];
     _errorMessage = null;
+    _chatMessages.clear();
     notifyListeners();
   }
 }

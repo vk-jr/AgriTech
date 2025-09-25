@@ -31,27 +31,71 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: const Text('Crop Suggestion AI'),
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<CropSuggestionProvider>().resetForm();
-              _clearForm();
-            },
-          ),
-        ],
       ),
       body: Consumer<CropSuggestionProvider>(
         builder: (context, provider, child) {
-          if (provider.suggestions.isNotEmpty) {
-            return _buildResultsView(context, provider);
-          }
-          return _buildFormView(context, provider);
+          return Column(
+            children: [
+              // Header
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryGreen.withOpacity(0.1),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      MdiIcons.brain,
+                      color: AppTheme.primaryGreen,
+                      size: 40,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Crop Recommendation Assistant',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Tell us about your farm to get personalized crop suggestions',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Chat Area
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  child: provider.chatMessages.isEmpty
+                      ? _buildFormInterface(context, provider)
+                      : ListView.builder(
+                          itemCount: provider.chatMessages.length,
+                          itemBuilder: (context, index) {
+                            final message = provider.chatMessages[index];
+                            return _buildChatMessage(context, message);
+                          },
+                        ),
+                ),
+              ),
+              
+              // Bottom Action Area
+              if (provider.chatMessages.isEmpty)
+                _buildSubmitArea(context, provider)
+              else
+                _buildNewSearchArea(context, provider),
+            ],
+          );
         },
       ),
     );
@@ -639,26 +683,228 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
   }
 
   void _submitForm(CropSuggestionProvider provider) {
-    if (_formKey.currentState!.validate()) {
-      if (provider.soilType.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a soil type')),
-        );
-        return;
-      }
-      if (provider.climate.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select a climate type')),
-        );
-        return;
-      }
-      provider.getCropSuggestions();
+    // Basic validation
+    if (provider.soilType.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a soil type')),
+      );
+      return;
     }
+    if (provider.climate.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a climate type')),
+      );
+      return;
+    }
+    if (provider.location.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your location')),
+      );
+      return;
+    }
+    if (provider.landSize <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid land size')),
+      );
+      return;
+    }
+    if (provider.budget <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your budget')),
+      );
+      return;
+    }
+    
+    // All validations passed, send to webhook
+    provider.getCropSuggestions();
   }
 
   void _clearForm() {
     _locationController.clear();
     _landSizeController.clear();
     _budgetController.clear();
+  }
+
+  Widget _buildFormInterface(BuildContext context, CropSuggestionProvider provider) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSoilTypeSection(context, provider),
+          const SizedBox(height: 20),
+          _buildClimateSection(context, provider),
+          const SizedBox(height: 20),
+          _buildLocationSection(context, provider),
+          const SizedBox(height: 20),
+          _buildLandSizeSection(context, provider),
+          const SizedBox(height: 20),
+          _buildBudgetSection(context, provider),
+          const SizedBox(height: 20),
+          _buildPreferencesSection(context, provider),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatMessage(BuildContext context, ChatMessage message) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: message.isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          Container(
+            constraints: const BoxConstraints(maxWidth: 300),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: message.isUser 
+                  ? AppTheme.primaryGreen
+                  : Colors.grey[200],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              message.content,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: message.isUser ? Colors.white : Colors.black87,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubmitArea(BuildContext context, CropSuggestionProvider provider) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (provider.isLoading) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryGreen.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppTheme.primaryGreen,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Getting crop recommendations...',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            
+            if (provider.errorMessage != null) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.error, color: Colors.red, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        provider.errorMessage!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.red[700],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: provider.isLoading ? null : () => _submitForm(provider),
+                icon: Icon(MdiIcons.brain),
+                label: const Text('Get AI Recommendations'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryGreen,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNewSearchArea(BuildContext context, CropSuggestionProvider provider) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: () {
+              provider.resetForm();
+              _clearForm();
+            },
+            icon: const Icon(Icons.refresh),
+            label: const Text('New Search'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryGreen,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
