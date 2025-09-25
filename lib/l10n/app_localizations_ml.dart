@@ -344,7 +344,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get home => 'ഹോം';
 
   @override
-  String get aiTools => 'AI ടൂളുകൾ';
+  String get aiTools => 'ടൂളുകൾ';
 
   @override
   String get market => 'മാർക്കറ്റ്';
@@ -419,7 +419,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get renewableEnergy => 'പുനരുപയോഗ ഊർജ്ജം';
 
   @override
-  String get aiPoweredAgriculture => 'AI-പവർഡ് കൃഷി';
+  String get aiPoweredAgriculture => 'സ്മാർട്ട് കൃഷി ടൂളുകൾ';
 
   @override
   String get aiDescription =>
@@ -480,10 +480,10 @@ class AppLocalizationsMl extends AppLocalizations {
   String get weatherInsightsDesc => 'വിപുലമായ കാലാവസ്ഥാ വിശകലനവും പ്രവചനങ്ങളും';
 
   @override
-  String get mainAiTools => 'പ്രധാന AI ടൂളുകൾ';
+  String get mainAiTools => 'പ്രധാന ടൂളുകൾ';
 
   @override
-  String get cropSuggestionAi => 'വിള നിർദ്ദേശ AI';
+  String get cropSuggestionAi => 'വിള നിർദ്ദേശം';
 
   @override
   String get cropSuggestionAiDesc =>

@@ -6,6 +6,7 @@ import '../providers/crop_suggestion_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 
 class CropSuggestionScreen extends StatefulWidget {
   const CropSuggestionScreen({super.key});
@@ -32,7 +33,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crop Suggestion AI'),
+        title: Text(AppLocalizations.of(context)!.cropSuggestionAi),
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
       ),
