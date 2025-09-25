@@ -394,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisCount: 2,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.5,
+              childAspectRatio: 1.2,
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
               children: provider.quickActions.map((action) {
@@ -436,27 +436,40 @@ class _HomeScreenState extends State<HomeScreen> {
     return CustomCard(
       onTap: () => context.go(action.route),
       backgroundColor: color.withOpacity(0.1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            action.title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 28),
+            const SizedBox(height: 6),
+            Flexible(
+              child: Text(
+                action.title,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Flexible(
+              child: Text(
+                action.description,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontSize: 11,
                 ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            action.description,
-            style: Theme.of(context).textTheme.bodySmall,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
