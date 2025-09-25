@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../providers/dashboard_provider.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../weather/providers/weather_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../../../core/theme/app_theme.dart';
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DashboardProvider>().loadDashboardData();
+      context.read<WeatherProvider>().getCurrentLocationAndWeather();
     });
   }
 
@@ -31,7 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: RefreshIndicator(
-        onRefresh: () => context.read<DashboardProvider>().refreshData(),
+        onRefresh: () async {
+          await context.read<DashboardProvider>().refreshData();
+          await context.read<WeatherProvider>().refreshWeather();
+        },
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
@@ -39,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(16),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
+                  _buildLocationHeader(context),
+                  const SizedBox(height: 16),
                   _buildWelcomeSection(context),
                   const SizedBox(height: 16),
                   _buildStatsSection(context),
@@ -97,66 +104,190 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWelcomeSection(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        final user = authProvider.currentUser;
-        if (user == null) return const SizedBox.shrink();
-
-        return CustomCard(
-          backgroundColor: AppTheme.lightGreen.withOpacity(0.1),
+  Widget _buildLocationHeader(BuildContext context) {
+    return Consumer<WeatherProvider>(
+      builder: (context, weatherProvider, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryGreen.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppTheme.primaryGreen.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: AppTheme.primaryGreen,
-                child: Text(
-                  user.name.split(' ').map((n) => n[0]).take(2).join(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
+              Icon(
+                Icons.location_on,
+                color: AppTheme.primaryGreen,
+                size: 20,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.welcomeBack(user.name.split(' ')[0]),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${AppLocalizations.of(context)!.level} ${user.gamificationStats.level} • ${user.gamificationStats.totalXP} XP',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      'Current Location',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppTheme.primaryGreen,
                             fontWeight: FontWeight.w500,
                           ),
                     ),
-                    if (user.location != null) ...[
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            size: 16,
-                            color: Colors.grey[600],
+                    const SizedBox(height: 2),
+                    Text(
+                      weatherProvider.currentLocation ?? 'Getting location...',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            user.location!,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ],
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
+              ),
+              if (weatherProvider.currentWeather != null) ...[
+                const SizedBox(width: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryGreen,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        weatherProvider.getWeatherIcon(
+                          weatherProvider.currentWeather!['weather'][0]['main'],
+                        ),
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        weatherProvider.getTemperature(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (weatherProvider.isLoadingLocation) ...[
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildWelcomeSection(BuildContext context) {
+    return Consumer2<AuthProvider, WeatherProvider>(
+      builder: (context, authProvider, weatherProvider, child) {
+        final user = authProvider.currentUser;
+        if (user == null) return const SizedBox.shrink();
+
+        return CustomCard(
+          backgroundColor: AppTheme.lightGreen.withOpacity(0.1),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: AppTheme.primaryGreen,
+                    child: Text(
+                      user.name.split(' ').map((n) => n[0]).take(2).join(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.welcomeBack(user.name.split(' ')[0]),
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${AppLocalizations.of(context)!.level} ${user.gamificationStats.level} • ${user.gamificationStats.totalXP} XP',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.primaryGreen,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Location and Weather Info
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            weatherProvider.currentLocation ?? user.location ?? 'Getting location...',
+                            style: Theme.of(context).textTheme.bodySmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (weatherProvider.currentWeather != null) ...[
+                    const SizedBox(width: 16),
+                    Row(
+                      children: [
+                        Text(
+                          weatherProvider.getWeatherIcon(
+                            weatherProvider.currentWeather!['weather'][0]['main'],
+                          ),
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          weatherProvider.getTemperature(),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryGreen,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
               ),
             ],
           ),

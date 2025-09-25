@@ -104,7 +104,7 @@ class CropSuggestionProvider extends ChangeNotifier {
 
       // Add loading message to chat
       _chatMessages.add(ChatMessage(
-        content: "🤔 Analyzing your farm details and getting personalized crop recommendations...",
+        content: "Let's see...",
         isUser: false,
         timestamp: DateTime.now(),
       ));
