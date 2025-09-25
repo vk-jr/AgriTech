@@ -114,7 +114,7 @@ class AIToolsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Main AI Tools',
+          AppLocalizations.of(context)!.mainAiTools,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -209,7 +209,7 @@ class AIToolsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Additional Tools',
+          AppLocalizations.of(context)!.additionalTools,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

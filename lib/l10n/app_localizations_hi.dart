@@ -334,7 +334,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get home => 'होम';
 
   @override
-  String get aiTools => 'AI टूल्स';
+  String get aiTools => 'टूल्स';
 
   @override
   String get market => 'बाजार';
@@ -409,7 +409,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get renewableEnergy => 'नवीकरणीय ऊर्जा';
 
   @override
-  String get aiPoweredAgriculture => 'AI-संचालित कृषि';
+  String get aiPoweredAgriculture => 'स्मार्ट कृषि टूल्स';
 
   @override
   String get aiDescription =>
@@ -470,7 +470,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get weatherInsightsDesc => 'उन्नत मौसम विश्लेषण और पूर्वानुमान';
 
   @override
-  String get mainAiTools => 'मुख्य AI टूल्स';
+  String get mainAiTools => 'मुख्य टूल्स';
 
   @override
   String get cropSuggestionAi => 'फसल सुझाव AI';

@@ -739,7 +739,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiTools.
   ///
   /// In en, this message translates to:
-  /// **'AI Tools'**
+  /// **'Tools'**
   String get aiTools;
 
   /// No description provided for @market.
@@ -889,7 +889,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiPoweredAgriculture.
   ///
   /// In en, this message translates to:
-  /// **'AI-Powered Agriculture'**
+  /// **'Smart Agriculture Tools'**
   String get aiPoweredAgriculture;
 
   /// No description provided for @aiDescription.
@@ -997,7 +997,7 @@ abstract class AppLocalizations {
   /// No description provided for @mainAiTools.
   ///
   /// In en, this message translates to:
-  /// **'Main AI Tools'**
+  /// **'Main Tools'**
   String get mainAiTools;
 
   /// No description provided for @cropSuggestionAi.
