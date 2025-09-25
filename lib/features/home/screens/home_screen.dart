@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      weatherProvider.currentLocation ?? 'Getting location...',
+                      weatherProvider.currentLocation ?? 'Locating...',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),

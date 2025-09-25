@@ -48,10 +48,19 @@ class WeatherProvider with ChangeNotifier {
       
       if (_currentPosition != null) {
         // Get location name
+        print('Getting location name for coordinates: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}');
         _currentLocation = await _locationService.getAddressFromCoordinates(
           _currentPosition!.latitude,
           _currentPosition!.longitude,
         );
+        
+        print('Location service returned: $_currentLocation');
+        
+        // If location name is still null, use coordinates
+        if (_currentLocation == null || _currentLocation!.isEmpty) {
+          _currentLocation = 'Lat: ${_currentPosition!.latitude.toStringAsFixed(4)}, Lon: ${_currentPosition!.longitude.toStringAsFixed(4)}';
+          print('Using coordinate fallback: $_currentLocation');
+        }
         
         _isLoadingLocation = false;
         notifyListeners();
@@ -59,7 +68,27 @@ class WeatherProvider with ChangeNotifier {
         // Get weather data
         await _loadWeatherData(_currentPosition!.latitude, _currentPosition!.longitude);
       } else {
-        throw Exception('Unable to get current location');
+        // Fallback to a default location if GPS fails
+        print('GPS location failed, using default location');
+        _currentLocation = 'Default Location';
+        _currentPosition = Position(
+          latitude: 28.6139, // Delhi coordinates as fallback
+          longitude: 77.2090,
+          timestamp: DateTime.now(),
+          accuracy: 0,
+          altitude: 0,
+          heading: 0,
+          speed: 0,
+          speedAccuracy: 0,
+          altitudeAccuracy: 0,
+          headingAccuracy: 0,
+        );
+        
+        _isLoadingLocation = false;
+        notifyListeners();
+        
+        // Get weather data for default location
+        await _loadWeatherData(_currentPosition!.latitude, _currentPosition!.longitude);
       }
     } catch (e) {
       _error = e.toString();

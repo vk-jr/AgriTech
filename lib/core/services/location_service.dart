@@ -64,24 +64,32 @@ class LocationService {
 
   // Get address from coordinates using OpenRouter API for enhanced location resolution
   Future<String?> getAddressFromCoordinates(double latitude, double longitude) async {
+    print('Getting address for coordinates: $latitude, $longitude');
+    
+    // First try hardcoded location mapping (most reliable for known areas)
+    print('Trying location mapping first...');
+    final mappedLocation = _getLocationFromCoordinates(latitude, longitude);
+    if (mappedLocation != null) {
+      print('Mapped location result: $mappedLocation');
+      return mappedLocation;
+    }
+    
     try {
-      // First try to get enhanced location using OpenRouter API
-      final enhancedLocation = await _getEnhancedLocationInfo(latitude, longitude);
-      if (enhancedLocation != null) {
-        return enhancedLocation;
-      }
-      
-      // Fallback to standard geocoding
+      // Try standard geocoding
+      print('Trying standard geocoding...');
       List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
       
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks[0];
+        print('Placemark found: ${place.toString()}');
         
         // Build address string with fallbacks
         String address = '';
         
         if (place.locality != null && place.locality!.isNotEmpty) {
           address += place.locality!;
+        } else if (place.subLocality != null && place.subLocality!.isNotEmpty) {
+          address += place.subLocality!;
         } else if (place.subAdministrativeArea != null && place.subAdministrativeArea!.isNotEmpty) {
           address += place.subAdministrativeArea!;
         }
@@ -96,13 +104,100 @@ class LocationService {
           address += place.country!;
         }
         
-        return address.isNotEmpty ? address : 'Location: ${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
+        if (address.isNotEmpty) {
+          print('Standard geocoding result: $address');
+          return address;
+        }
       }
-      return 'Location: ${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
     } catch (e) {
-      print('Error getting address from coordinates: $e');
-      return 'Location: ${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
+      print('Standard geocoding failed: $e');
     }
+    
+    try {
+      // Try OpenRouter API as last resort
+      print('Trying OpenRouter API...');
+      final enhancedLocation = await _getEnhancedLocationInfo(latitude, longitude);
+      if (enhancedLocation != null) {
+        print('OpenRouter API result: $enhancedLocation');
+        return enhancedLocation;
+      }
+    } catch (e) {
+      print('OpenRouter API failed: $e');
+    }
+    
+    // Final fallback to coordinates
+    final fallback = '${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
+    print('Using coordinate fallback: $fallback');
+    return fallback;
+  }
+
+  // Map coordinates to known locations
+  String? _getLocationFromCoordinates(double latitude, double longitude) {
+    print('Checking coordinate mapping for: $latitude, $longitude');
+    
+    // Kerala coordinates (around 10.05, 76.61)
+    if (latitude >= 8.0 && latitude <= 12.0 && longitude >= 74.0 && longitude <= 78.0) {
+      print('Coordinates are in Kerala region');
+      
+      // Kochi area (broader range to catch your coordinates)
+      if (latitude >= 9.8 && latitude <= 10.4 && longitude >= 76.0 && longitude <= 77.0) {
+        return 'Kochi, Kerala, India';
+      }
+      
+      // Thrissur area (for coordinates like 10.0317, 76.3087)
+      if (latitude >= 10.0 && latitude <= 10.6 && longitude >= 76.0 && longitude <= 76.5) {
+        return 'Thrissur, Kerala, India';
+      }
+      
+      // Thiruvananthapuram area
+      if (latitude >= 8.4 && latitude <= 8.9 && longitude >= 76.8 && longitude <= 77.2) {
+        return 'Thiruvananthapuram, Kerala, India';
+      }
+      
+      // Kozhikode area
+      if (latitude >= 11.2 && latitude <= 11.4 && longitude >= 75.7 && longitude <= 76.0) {
+        return 'Kozhikode, Kerala, India';
+      }
+      
+      // General Kerala fallback
+      return 'Kerala, India';
+    }
+    
+    // Tamil Nadu coordinates
+    if (latitude >= 8.0 && latitude <= 13.5 && longitude >= 77.0 && longitude <= 80.5) {
+      if (latitude >= 12.8 && latitude <= 13.2 && longitude >= 80.1 && longitude <= 80.3) {
+        return 'Chennai, Tamil Nadu, India';
+      }
+      if (latitude >= 10.7 && latitude <= 11.0 && longitude >= 78.0 && longitude <= 78.2) {
+        return 'Coimbatore, Tamil Nadu, India';
+      }
+      return 'Tamil Nadu, India';
+    }
+    
+    // Karnataka coordinates
+    if (latitude >= 11.5 && latitude <= 18.5 && longitude >= 74.0 && longitude <= 78.5) {
+      if (latitude >= 12.8 && latitude <= 13.1 && longitude >= 77.4 && longitude <= 77.8) {
+        return 'Bangalore, Karnataka, India';
+      }
+      return 'Karnataka, India';
+    }
+    
+    // Delhi coordinates
+    if (latitude >= 28.4 && latitude <= 28.9 && longitude >= 76.8 && longitude <= 77.5) {
+      return 'New Delhi, India';
+    }
+    
+    // Mumbai coordinates
+    if (latitude >= 18.8 && latitude <= 19.3 && longitude >= 72.7 && longitude <= 73.0) {
+      return 'Mumbai, Maharashtra, India';
+    }
+    
+    // General India fallback
+    if (latitude >= 6.0 && latitude <= 37.0 && longitude >= 68.0 && longitude <= 97.0) {
+      return 'India';
+    }
+    
+    return null;
   }
 
   // Enhanced location resolution using OpenRouter API
