@@ -20,24 +20,60 @@ class PlantDoctorScreen extends StatelessWidget {
       ),
       body: Consumer<PlantDoctorProvider>(
         builder: (context, provider, child) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeaderSection(context),
-                const SizedBox(height: 24),
-                _buildImageSection(context, provider),
-                const SizedBox(height: 24),
-                _buildActionButtons(context, provider),
-                const SizedBox(height: 24),
-                if (provider.isAnalyzing) _buildAnalyzingSection(context),
-                if (provider.errorMessage != null)
-                  _buildErrorSection(context, provider.errorMessage!),
-                const SizedBox(height: 24),
-                _buildChatSection(context, provider),
-              ],
-            ),
+          return Column(
+            children: [
+              // Header
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.medical_services,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 40,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Plant Health Assistant',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Take a photo of your plant to get instant diagnosis',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Chat Area
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  child: provider.chatMessages.isEmpty
+                      ? _buildEmptyState(context)
+                      : ListView.builder(
+                          itemCount: provider.chatMessages.length,
+                          itemBuilder: (context, index) {
+                            final message = provider.chatMessages[index];
+                            return _buildSimpleChatMessage(context, message);
+                          },
+                        ),
+                ),
+              ),
+              
+              // Bottom Input Area
+              _buildBottomInputArea(context, provider),
+            ],
           );
         },
       ),
@@ -648,7 +684,7 @@ class PlantDoctorScreen extends StatelessWidget {
             itemCount: provider.chatMessages.length,
             itemBuilder: (context, index) {
               final message = provider.chatMessages[index];
-              return _buildChatMessage(context, message);
+              return _buildSimpleChatMessage(context, message);
             },
           ),
         ),
@@ -656,88 +692,228 @@ class PlantDoctorScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChatMessage(BuildContext context, ChatMessage message) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircleAvatar(
-            backgroundColor: message.isUser 
-                ? Theme.of(context).colorScheme.primary 
-                : Colors.green,
-            child: Icon(
-              message.isUser ? Icons.person : Icons.smart_toy,
-              color: Colors.white,
-              size: 20,
+          Icon(
+            Icons.camera_alt,
+            size: 80,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Ready to help your plants!',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message.isUser ? 'You' : 'AI Assistant',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+          const SizedBox(height: 8),
+          Text(
+            'Take a photo of your plant to get started',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Colors.grey[500],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSimpleChatMessage(BuildContext context, ChatMessage message) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: message.isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          if (message.image != null) ...[
+            Container(
+              constraints: const BoxConstraints(maxWidth: 250),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: FutureBuilder<Uint8List>(
+                  future: message.image!.readAsBytes(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.memory(
+                        snapshot.data!,
+                        fit: BoxFit.cover,
+                      );
+                    }
+                    return Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
                 ),
-                const SizedBox(height: 4),
-                if (message.image != null) ...[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: FutureBuilder<Uint8List>(
-                      future: message.image!.readAsBytes(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Image.memory(
-                            snapshot.data!,
-                            height: 150,
-                            width: 200,
-                            fit: BoxFit.cover,
-                          );
-                        }
-                        return Container(
-                          height: 150,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      },
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          if (message.content.isNotEmpty) ...[
+            Container(
+              constraints: const BoxConstraints(maxWidth: 280),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: message.isUser 
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                message.content,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: message.isUser ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomInputArea(BuildContext context, PlantDoctorProvider provider) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (provider.isAnalyzing) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Analyzing your plant...',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            
+            if (provider.errorMessage != null) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.error, color: Colors.red, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        provider.errorMessage!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.red[700],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            
+            Row(
+              children: [
+                // Camera Button
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: provider.isAnalyzing ? null : () async {
+                      await provider.pickImageFromCamera();
+                      if (provider.selectedImage != null) {
+                        provider.analyzeImage();
+                      }
+                    },
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Camera'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                ],
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: message.isUser 
-                        ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                        : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    message.content,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatDate(message.timestamp),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[500],
+                const SizedBox(width: 12),
+                // Gallery Button
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: provider.isAnalyzing ? null : () async {
+                      await provider.pickImageFromGallery();
+                      if (provider.selectedImage != null) {
+                        provider.analyzeImage();
+                      }
+                    },
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Gallery'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            
+            if (provider.chatMessages.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              TextButton.icon(
+                onPressed: provider.clearDiagnosis,
+                icon: const Icon(Icons.refresh, size: 18),
+                label: const Text('Start New Diagnosis'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.grey[600],
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
