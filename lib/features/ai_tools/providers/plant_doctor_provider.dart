@@ -1,6 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'dart:convert';
 import '../../../core/models/plant_disease_model.dart';
+
+class ChatMessage {
+  final String content;
+  final bool isUser;
+  final DateTime timestamp;
+  final XFile? image;
+
+  ChatMessage({
+    required this.content,
+    required this.isUser,
+    required this.timestamp,
+    this.image,
+  });
+}
 
 class PlantDoctorProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -9,6 +26,7 @@ class PlantDoctorProvider extends ChangeNotifier {
   String? _errorMessage;
   XFile? _selectedImage;
   List<DiagnosisResult> _diagnosisHistory = [];
+  List<ChatMessage> _chatMessages = [];
 
   bool get isLoading => _isLoading;
   bool get isAnalyzing => _isAnalyzing;
@@ -16,11 +34,7 @@ class PlantDoctorProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   XFile? get selectedImage => _selectedImage;
   List<DiagnosisResult> get diagnosisHistory => _diagnosisHistory;
-
-  void _setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
-  }
+  List<ChatMessage> get chatMessages => _chatMessages;
 
   void _setAnalyzing(bool analyzing) {
     _isAnalyzing = analyzing;
@@ -30,6 +44,77 @@ class PlantDoctorProvider extends ChangeNotifier {
   void _setError(String? error) {
     _errorMessage = error;
     notifyListeners();
+  }
+
+  Future<String?> _sendImageToWebhook(XFile image) async {
+    try {
+      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook-test/plantDoctor';
+      
+      var request = http.MultipartRequest('POST', Uri.parse(webhookUrl));
+      
+      // Read image bytes for web compatibility
+      final bytes = await image.readAsBytes();
+      
+      // Determine MIME type based on file extension
+      String mimeType = 'image/jpeg'; // default
+      final fileName = image.name.toLowerCase();
+      if (fileName.endsWith('.png')) {
+        mimeType = 'image/png';
+      } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+        mimeType = 'image/jpeg';
+      } else if (fileName.endsWith('.gif')) {
+        mimeType = 'image/gif';
+      } else if (fileName.endsWith('.webp')) {
+        mimeType = 'image/webp';
+      }
+      
+      // Add the image file as a binary file with proper MIME type
+      var multipartFile = http.MultipartFile.fromBytes(
+        'image', // field name
+        bytes,
+        filename: image.name.isNotEmpty ? image.name : 'plant_image.jpg',
+        contentType: MediaType.parse(mimeType),
+      );
+      
+      if (kDebugMode) {
+        print('Sending image with MIME type: $mimeType');
+        print('Filename: ${image.name.isNotEmpty ? image.name : 'plant_image.jpg'}');
+        print('Image size: ${bytes.length} bytes');
+      }
+      
+      request.files.add(multipartFile);
+      
+      var response = await request.send();
+      
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        if (kDebugMode) {
+          print('Image successfully sent to webhook');
+          print('Response: $responseBody');
+        }
+        
+        // Parse the JSON response
+        try {
+          final jsonResponse = json.decode(responseBody);
+          if (jsonResponse['Result'] != null) {
+            return jsonResponse['Result'].toString();
+          }
+          return responseBody;
+        } catch (e) {
+          return responseBody;
+        }
+      } else {
+        if (kDebugMode) {
+          print('Failed to send image to webhook. Status code: ${response.statusCode}');
+        }
+        return 'Failed to analyze image. Please try again.';
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error sending image to webhook: $e');
+      }
+      return 'Error occurred while analyzing image.';
+    }
   }
 
   Future<void> pickImageFromCamera() async {
@@ -46,6 +131,15 @@ class PlantDoctorProvider extends ChangeNotifier {
         _selectedImage = image;
         _diagnosisResult = null;
         _errorMessage = null;
+        
+        // Add image to chat
+        _chatMessages.add(ChatMessage(
+          content: "Image uploaded for analysis",
+          isUser: true,
+          timestamp: DateTime.now(),
+          image: image,
+        ));
+        
         notifyListeners();
       }
     } catch (e) {
@@ -67,6 +161,15 @@ class PlantDoctorProvider extends ChangeNotifier {
         _selectedImage = image;
         _diagnosisResult = null;
         _errorMessage = null;
+        
+        // Add image to chat
+        _chatMessages.add(ChatMessage(
+          content: "Image uploaded for analysis",
+          isUser: true,
+          timestamp: DateTime.now(),
+          image: image,
+        ));
+        
         notifyListeners();
       }
     } catch (e) {
@@ -84,15 +187,16 @@ class PlantDoctorProvider extends ChangeNotifier {
     _setError(null);
 
     try {
-      // Simulate AI analysis
-      await Future.delayed(const Duration(seconds: 4));
+      // Send image to webhook and get response
+      final response = await _sendImageToWebhook(_selectedImage!);
       
-      _diagnosisResult = _generateMockDiagnosis();
-      _diagnosisHistory.insert(0, _diagnosisResult!);
-      
-      // Keep only last 10 diagnoses
-      if (_diagnosisHistory.length > 10) {
-        _diagnosisHistory = _diagnosisHistory.take(10).toList();
+      if (response != null) {
+        // Add webhook response to chat
+        _chatMessages.add(ChatMessage(
+          content: response,
+          isUser: false,
+          timestamp: DateTime.now(),
+        ));
       }
       
       _setAnalyzing(false);
@@ -295,6 +399,7 @@ class PlantDoctorProvider extends ChangeNotifier {
     _diagnosisResult = null;
     _selectedImage = null;
     _errorMessage = null;
+    _chatMessages.clear();
     notifyListeners();
   }
 

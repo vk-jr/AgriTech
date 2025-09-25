@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../shared/widgets/custom_card.dart';
@@ -31,12 +32,10 @@ class PlantDoctorScreen extends StatelessWidget {
                 _buildActionButtons(context, provider),
                 const SizedBox(height: 24),
                 if (provider.isAnalyzing) _buildAnalyzingSection(context),
-                if (provider.diagnosisResult != null) 
-                  _buildDiagnosisResult(context, provider.diagnosisResult!),
                 if (provider.errorMessage != null)
                   _buildErrorSection(context, provider.errorMessage!),
                 const SizedBox(height: 24),
-                _buildHistorySection(context, provider),
+                _buildChatSection(context, provider),
               ],
             ),
           );
@@ -108,9 +107,25 @@ class PlantDoctorScreen extends StatelessWidget {
             child: provider.selectedImage != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.file(
-                      File(provider.selectedImage!.path),
-                      fit: BoxFit.cover,
+                    child: FutureBuilder<Uint8List>(
+                      future: provider.selectedImage!.readAsBytes(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Image.memory(
+                            snapshot.data!,
+                            fit: BoxFit.cover,
+                          );
+                        }
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      },
                     ),
                   )
                 : Column(
@@ -605,5 +620,125 @@ class PlantDoctorScreen extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
+  Widget _buildChatSection(BuildContext context, PlantDoctorProvider provider) {
+    if (provider.chatMessages.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Analysis Chat',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          height: 400,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: provider.chatMessages.length,
+            itemBuilder: (context, index) {
+              final message = provider.chatMessages[index];
+              return _buildChatMessage(context, message);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChatMessage(BuildContext context, ChatMessage message) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundColor: message.isUser 
+                ? Theme.of(context).colorScheme.primary 
+                : Colors.green,
+            child: Icon(
+              message.isUser ? Icons.person : Icons.smart_toy,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message.isUser ? 'You' : 'AI Assistant',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                if (message.image != null) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: FutureBuilder<Uint8List>(
+                      future: message.image!.readAsBytes(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Image.memory(
+                            snapshot.data!,
+                            height: 150,
+                            width: 200,
+                            fit: BoxFit.cover,
+                          );
+                        }
+                        return Container(
+                          height: 150,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: message.isUser 
+                        ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                        : Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    message.content,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _formatDate(message.timestamp),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[500],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
