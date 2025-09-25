@@ -747,6 +747,8 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
   }
 
   Widget _buildChatMessage(BuildContext context, ChatMessage message) {
+    bool isLoading = message.content.contains("🤔 Analyzing");
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -761,14 +763,94 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
                   : Colors.grey[200],
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              message.content,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: message.isUser ? Colors.white : Colors.black87,
-              ),
-            ),
+            child: isLoading 
+                ? _buildLoadingContent(context, message)
+                : _buildFormattedText(context, message),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingContent(BuildContext context, ChatMessage message) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            message.content,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.black87,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFormattedText(BuildContext context, ChatMessage message) {
+    return _parseFormattedText(context, message.content, message.isUser);
+  }
+
+  Widget _parseFormattedText(BuildContext context, String text, bool isUser) {
+    List<TextSpan> spans = [];
+    List<String> parts = text.split(RegExp(r'(\*\*.*?\*\*|\*.*?\*|###.*?)'));
+    
+    for (String part in parts) {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        // Bold text
+        spans.add(TextSpan(
+          text: part.substring(2, part.length - 2),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: isUser ? Colors.white : Colors.black87,
+            fontSize: 16,
+          ),
+        ));
+      } else if (part.startsWith('*') && part.endsWith('*')) {
+        // Italic text
+        spans.add(TextSpan(
+          text: part.substring(1, part.length - 1),
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            color: isUser ? Colors.white : Colors.black87,
+          ),
+        ));
+      } else if (part.startsWith('###')) {
+        // Header text
+        spans.add(TextSpan(
+          text: part.substring(3).trim(),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: isUser ? Colors.white : AppTheme.primaryGreen,
+          ),
+        ));
+      } else if (part.trim().isNotEmpty) {
+        // Regular text
+        spans.add(TextSpan(
+          text: part,
+          style: TextStyle(
+            color: isUser ? Colors.white : Colors.black87,
+          ),
+        ));
+      }
+    }
+
+    return RichText(
+      text: TextSpan(
+        children: spans,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
     );
   }

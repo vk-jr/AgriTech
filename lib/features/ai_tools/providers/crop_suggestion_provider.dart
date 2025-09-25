@@ -102,8 +102,21 @@ class CropSuggestionProvider extends ChangeNotifier {
       ));
       notifyListeners();
 
+      // Add loading message to chat
+      _chatMessages.add(ChatMessage(
+        content: "🤔 Analyzing your farm details and getting personalized crop recommendations...",
+        isUser: false,
+        timestamp: DateTime.now(),
+      ));
+      notifyListeners();
+
       // Send data to webhook
       final response = await _sendDataToWebhook();
+      
+      // Remove loading message
+      if (_chatMessages.isNotEmpty && _chatMessages.last.content.contains("🤔 Analyzing")) {
+        _chatMessages.removeLast();
+      }
       
       if (response != null) {
         // Add webhook response to chat
@@ -116,6 +129,10 @@ class CropSuggestionProvider extends ChangeNotifier {
       
       _setLoading(false);
     } catch (e) {
+      // Remove loading message if error occurs
+      if (_chatMessages.isNotEmpty && _chatMessages.last.content.contains("🤔 Analyzing")) {
+        _chatMessages.removeLast();
+      }
       _setError('Failed to get crop suggestions. Please try again.');
       _setLoading(false);
     }
