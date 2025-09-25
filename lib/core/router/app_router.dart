@@ -18,6 +18,8 @@ import '../../features/community/screens/forum_post_detail_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/profile/screens/settings_screen.dart';
 import '../../features/weather/screens/weather_prediction_screen.dart';
+import '../../features/chat/screens/agri_chat_screen.dart';
+import '../../features/leaderboard/screens/leaderboard_screen.dart';
 import '../utils/page_transitions.dart';
 
 class AppRouter {
@@ -187,6 +189,24 @@ class AppRouter {
                 ),
               ),
             ],
+          ),
+          GoRoute(
+            path: '/agri-chat',
+            name: 'agri-chat',
+            pageBuilder: (context, state) => PageTransitions.slideFromRight(
+              const AgriChatScreen(),
+              state,
+              name: 'agri-chat',
+            ),
+          ),
+          GoRoute(
+            path: '/leaderboard',
+            name: 'leaderboard',
+            pageBuilder: (context, state) => PageTransitions.slideFromRight(
+              const LeaderboardScreen(),
+              state,
+              name: 'leaderboard',
+            ),
           ),
         ],
       ),

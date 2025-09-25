@@ -97,6 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         IconButton(
+          icon: const Icon(Icons.message_outlined, color: Colors.white),
+          onPressed: () => context.go('/agri-chat'),
+        ),
+        IconButton(
           icon: const Icon(Icons.settings_outlined, color: Colors.white),
           onPressed: () => context.go('/profile/settings'),
         ),

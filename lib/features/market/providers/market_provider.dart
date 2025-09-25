@@ -1,27 +1,36 @@
 import 'package:flutter/foundation.dart';
 import '../../../core/models/market_model.dart';
+import '../../../core/models/market_analysis_model.dart';
 
 class MarketProvider extends ChangeNotifier {
   List<Product> _products = [];
   List<Product> _filteredProducts = [];
   List<CartItem> _cartItems = [];
   List<Order> _orders = [];
+  List<MarketAnalysis> _marketAnalysis = [];
+  List<MarketInsight> _marketInsights = [];
   bool _isLoading = false;
+  bool _isAnalysisLoading = false;
   String? _errorMessage;
   ProductCategory? _selectedCategory;
   String _searchQuery = '';
   SortOption _sortOption = SortOption.newest;
+  AnalysisTimeframe _selectedTimeframe = AnalysisTimeframe.oneMonth;
 
   // Getters
   List<Product> get products => _filteredProducts;
   List<Product> get allProducts => _products;
   List<CartItem> get cartItems => _cartItems;
   List<Order> get orders => _orders;
+  List<MarketAnalysis> get marketAnalysis => _marketAnalysis;
+  List<MarketInsight> get marketInsights => _marketInsights;
   bool get isLoading => _isLoading;
+  bool get isAnalysisLoading => _isAnalysisLoading;
   String? get errorMessage => _errorMessage;
   ProductCategory? get selectedCategory => _selectedCategory;
   String get searchQuery => _searchQuery;
   SortOption get sortOption => _sortOption;
+  AnalysisTimeframe get selectedTimeframe => _selectedTimeframe;
 
   int get cartItemCount => _cartItems.fold(0, (sum, item) => sum + item.quantity);
   double get cartTotal => _cartItems.fold(0, (sum, item) => sum + item.totalPrice);
@@ -339,6 +348,172 @@ class MarketProvider extends ChangeNotifier {
     ];
 
     _filteredProducts = List.from(_products);
+    _initializeMarketAnalysisData();
+  }
+
+  void _initializeMarketAnalysisData() {
+    _marketAnalysis = [
+      MarketAnalysis(
+        id: '1',
+        cropName: 'Tomato',
+        currentPrice: 45.0,
+        previousPrice: 42.0,
+        priceChange: 3.0,
+        priceChangePercentage: 7.14,
+        trend: 'up',
+        demand: 85.0,
+        supply: 78.0,
+        season: 'Peak',
+        priceHistory: _generatePriceHistory('Tomato', 45.0),
+        forecast: MarketForecast(
+          predictedPrice: 48.0,
+          confidence: 0.82,
+          timeframe: '1week',
+          factors: ['High demand', 'Weather conditions', 'Festival season'],
+          recommendation: 'hold',
+        ),
+        majorMarkets: ['Mumbai', 'Delhi', 'Bangalore'],
+        qualityGrade: 'Grade A',
+        lastUpdated: DateTime.now(),
+      ),
+      MarketAnalysis(
+        id: '2',
+        cropName: 'Rice',
+        currentPrice: 120.0,
+        previousPrice: 125.0,
+        priceChange: -5.0,
+        priceChangePercentage: -4.0,
+        trend: 'down',
+        demand: 70.0,
+        supply: 85.0,
+        season: 'Off-season',
+        priceHistory: _generatePriceHistory('Rice', 120.0),
+        forecast: MarketForecast(
+          predictedPrice: 115.0,
+          confidence: 0.75,
+          timeframe: '1month',
+          factors: ['Excess supply', 'Import policies', 'Storage costs'],
+          recommendation: 'sell',
+        ),
+        majorMarkets: ['Delhi', 'Kolkata', 'Chennai'],
+        qualityGrade: 'Premium',
+        lastUpdated: DateTime.now(),
+      ),
+      MarketAnalysis(
+        id: '3',
+        cropName: 'Wheat',
+        currentPrice: 28.0,
+        previousPrice: 28.0,
+        priceChange: 0.0,
+        priceChangePercentage: 0.0,
+        trend: 'stable',
+        demand: 75.0,
+        supply: 75.0,
+        season: 'Regular',
+        priceHistory: _generatePriceHistory('Wheat', 28.0),
+        forecast: MarketForecast(
+          predictedPrice: 29.0,
+          confidence: 0.68,
+          timeframe: '3months',
+          factors: ['Stable demand', 'Government policies', 'Export trends'],
+          recommendation: 'hold',
+        ),
+        majorMarkets: ['Punjab', 'Haryana', 'UP'],
+        qualityGrade: 'Grade A',
+        lastUpdated: DateTime.now(),
+      ),
+    ];
+
+    _marketInsights = [
+      MarketInsight(
+        id: '1',
+        title: 'Tomato Prices Expected to Rise',
+        description: 'Due to recent weather conditions and increased demand during festival season, tomato prices are expected to increase by 10-15% in the coming weeks.',
+        category: 'price',
+        severity: 'medium',
+        publishedAt: DateTime.now().subtract(const Duration(hours: 2)),
+        affectedCrops: ['Tomato', 'Onion'],
+      ),
+      MarketInsight(
+        id: '2',
+        title: 'Rice Export Policy Changes',
+        description: 'New government policies on rice exports may affect domestic prices. Farmers are advised to monitor market trends closely.',
+        category: 'policy',
+        severity: 'high',
+        publishedAt: DateTime.now().subtract(const Duration(hours: 6)),
+        affectedCrops: ['Rice', 'Basmati Rice'],
+      ),
+      MarketInsight(
+        id: '3',
+        title: 'Seasonal Demand for Vegetables',
+        description: 'With the approaching winter season, demand for leafy vegetables and root crops is expected to increase significantly.',
+        category: 'demand',
+        severity: 'low',
+        publishedAt: DateTime.now().subtract(const Duration(days: 1)),
+        affectedCrops: ['Spinach', 'Carrot', 'Cabbage'],
+      ),
+    ];
+  }
+
+  List<PriceHistory> _generatePriceHistory(String crop, double currentPrice) {
+    final List<PriceHistory> history = [];
+    final random = DateTime.now().millisecond;
+    
+    for (int i = 30; i >= 0; i--) {
+      final date = DateTime.now().subtract(Duration(days: i));
+      final variation = (random % 10 - 5) / 100; // ±5% variation
+      final price = currentPrice * (1 + variation);
+      final volume = 100 + (random % 50); // Random volume
+      
+      history.add(PriceHistory(
+        date: date,
+        price: price,
+        volume: volume.toDouble(),
+      ));
+    }
+    
+    return history;
+  }
+
+  // Market Analysis Methods
+  Future<void> loadMarketAnalysis() async {
+    _isAnalysisLoading = true;
+    notifyListeners();
+
+    try {
+      // Simulate API call
+      await Future.delayed(const Duration(seconds: 1));
+      // Data is already initialized in _initializeMarketAnalysisData
+      _isAnalysisLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _setError('Failed to load market analysis: $e');
+      _isAnalysisLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void updateTimeframe(AnalysisTimeframe timeframe) {
+    _selectedTimeframe = timeframe;
+    notifyListeners();
+    // In a real app, this would trigger a new API call
+    loadMarketAnalysis();
+  }
+
+  List<MarketAnalysis> getTopPerformers() {
+    final sorted = List<MarketAnalysis>.from(_marketAnalysis);
+    sorted.sort((a, b) => b.priceChangePercentage.compareTo(a.priceChangePercentage));
+    return sorted.take(3).toList();
+  }
+
+  List<MarketAnalysis> getTopDecliners() {
+    final sorted = List<MarketAnalysis>.from(_marketAnalysis);
+    sorted.sort((a, b) => a.priceChangePercentage.compareTo(b.priceChangePercentage));
+    return sorted.take(3).toList();
+  }
+
+  List<MarketInsight> getHighPriorityInsights() {
+    return _marketInsights.where((insight) => insight.severity == 'high').toList();
   }
 }
 

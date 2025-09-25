@@ -14,6 +14,8 @@ import 'features/ai_tools/providers/plant_doctor_provider.dart';
 import 'features/market/providers/market_provider.dart';
 import 'features/community/providers/community_provider.dart';
 import 'features/profile/providers/profile_provider.dart';
+import 'features/chat/providers/chat_provider.dart';
+import 'features/leaderboard/providers/leaderboard_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'features/weather/providers/weather_provider.dart';
 
@@ -57,6 +59,8 @@ class AgriTechApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CommunityProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => WeatherProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
       ],
       child: Consumer2<ThemeProvider, LocalizationProvider>(
         builder: (context, themeProvider, localizationProvider, child) {

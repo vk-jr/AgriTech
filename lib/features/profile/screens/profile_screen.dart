@@ -31,6 +31,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
+            icon: const Icon(Icons.message_outlined),
+            onPressed: () => context.go('/agri-chat'),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => context.go('/profile/settings'),
           ),
@@ -53,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildStatsSection(context, provider.userProfile!),
                 _buildFarmingSection(context, provider.userProfile!),
                 _buildAchievementsSection(context, provider.userProfile!),
+                _buildLeaderboardButton(context),
                 _buildActivitySection(context, provider.userProfile!),
                 const SizedBox(height: 100),
               ],
@@ -695,5 +700,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case AchievementCategory.learning:
         return Icons.school;
     }
+  }
+
+  Widget _buildLeaderboardButton(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      child: CustomButton(
+        text: 'View Leaderboard',
+        icon: Icons.leaderboard,
+        onPressed: () => context.go('/leaderboard'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
   }
 }
