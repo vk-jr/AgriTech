@@ -47,18 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildQuickActionsSection(context),
                   const SizedBox(height: 24),
                   _buildSustainabilitySection(context),
-                  const SizedBox(height: 100), // Bottom padding for FAB
+                  const SizedBox(height: 24), // Bottom padding
                 ]),
               ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButtonExtended(
-        onPressed: () => context.go('/ai-tools/crop-suggestion'),
-        icon: MdiIcons.brain,
-        label: 'AI Assistant',
-        backgroundColor: AppTheme.primaryGreen,
       ),
     );
   }
