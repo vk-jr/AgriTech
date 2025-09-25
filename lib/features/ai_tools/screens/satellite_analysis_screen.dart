@@ -42,7 +42,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Row(
           children: [
@@ -55,7 +55,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
             const Text('Farm Satellite Analysis'),
           ],
         ),
-        backgroundColor: const Color(0xFF1A1A2E),
+        backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -75,26 +75,29 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
 
   Widget _buildSatelliteViewSection(BuildContext context) {
     return Container(
-      width: double.infinity,
+      margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0A0A0A),
-            Color(0xFF1A1A2E),
-            Color(0xFF16213E),
-          ],
+      decoration: BoxDecoration(
+        color: AppTheme.primaryGreen.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppTheme.primaryGreen.withOpacity(0.3),
+          width: 2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primaryGreen.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          const SizedBox(height: 20),
           Text(
             'Satellite View of My Farm',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.white,
+              color: AppTheme.primaryGreen,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -102,24 +105,32 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
           
           // Animated Earth with Farm Location
           SizedBox(
-            width: 200,
-            height: 200,
+            width: 180,
+            height: 180,
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Outer glow effect
+                // Outer glow rings
                 Container(
                   width: 180,
                   height: 180,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primaryGreen.withOpacity(0.3),
-                        blurRadius: 30,
-                        spreadRadius: 10,
-                      ),
-                    ],
+                    border: Border.all(
+                      color: AppTheme.primaryGreen.withOpacity(0.3),
+                      width: 2,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 160,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppTheme.primaryGreen.withOpacity(0.2),
+                      width: 1,
+                    ),
                   ),
                 ),
                 
@@ -130,29 +141,29 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                     return Transform.rotate(
                       angle: _earthRotationAnimation.value * 2 * 3.14159,
                       child: Container(
-                        width: 150,
-                        height: 150,
+                        width: 120,
+                        height: 120,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              AppTheme.primaryGreen.withOpacity(0.8),
-                              AppTheme.skyBlue.withOpacity(0.6),
-                              const Color(0xFF2E8B57),
+                              const Color(0xFF4CAF50),
+                              const Color(0xFF2196F3),
+                              const Color(0xFF1976D2),
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 10,
-                              offset: const Offset(5, 5),
+                              color: AppTheme.primaryGreen.withOpacity(0.4),
+                              blurRadius: 20,
+                              spreadRadius: 5,
                             ),
                           ],
                         ),
                         child: const Icon(
                           Icons.public,
                           color: Colors.white,
-                          size: 60,
+                          size: 50,
                         ),
                       ),
                     );
@@ -161,20 +172,13 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                 
                 // Farm location indicator
                 Positioned(
-                  top: 60,
-                  right: 50,
+                  top: 45,
+                  right: 35,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryGreen,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.primaryGreen.withOpacity(0.5),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                        ),
-                      ],
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -182,15 +186,15 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                         const Icon(
                           Icons.location_on,
                           color: Colors.white,
-                          size: 12,
+                          size: 10,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 2),
                         Text(
                           'My Farm',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                            fontSize: 8,
                           ),
                         ),
                       ],
@@ -198,16 +202,29 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                   ),
                 ),
                 
-                // Satellite indicators
-                Positioned(
-                  top: 20,
-                  left: 30,
-                  child: _buildSatelliteIndicator(),
-                ),
-                Positioned(
-                  bottom: 30,
-                  right: 20,
-                  child: _buildSatelliteIndicator(),
+                // Satellite indicators with orbiting animation
+                AnimatedBuilder(
+                  animation: _earthRotationAnimation,
+                  builder: (context, child) {
+                    return Stack(
+                      children: [
+                        Transform.rotate(
+                          angle: _earthRotationAnimation.value * 2 * 3.14159 * 0.5,
+                          child: Transform.translate(
+                            offset: const Offset(0, -90),
+                            child: _buildSatelliteIndicator(),
+                          ),
+                        ),
+                        Transform.rotate(
+                          angle: _earthRotationAnimation.value * 2 * 3.14159 * 0.7 + 3.14159,
+                          child: Transform.translate(
+                            offset: const Offset(0, -90),
+                            child: _buildSatelliteIndicator(),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -217,7 +234,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
           Text(
             'Live satellite monitoring of your 0.2 hectare farm',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[400],
+              color: Colors.grey[700],
             ),
             textAlign: TextAlign.center,
           ),
@@ -225,11 +242,8 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppTheme.primaryGreen.withOpacity(0.2),
+              color: AppTheme.primaryGreen,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppTheme.primaryGreen.withOpacity(0.5),
-              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -237,8 +251,8 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryGreen,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -246,7 +260,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                 Text(
                   'Live',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.primaryGreen,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -286,14 +300,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFF16213E),
-            Theme.of(context).colorScheme.background,
-          ],
-        ),
+        color: Theme.of(context).colorScheme.background,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

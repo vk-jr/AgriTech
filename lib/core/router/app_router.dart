@@ -10,6 +10,7 @@ import '../../features/ai_tools/screens/crop_suggestion_screen.dart';
 import '../../features/ai_tools/screens/plant_doctor_screen.dart';
 import '../../features/ai_tools/screens/ar_view_screen.dart';
 import '../../features/ai_tools/screens/satellite_analysis_screen.dart';
+import '../../features/ai_tools/screens/plant_recommendation_screen.dart';
 import '../../features/market/screens/market_screen.dart';
 import '../../features/market/screens/product_detail_screen.dart';
 import '../../features/community/screens/community_screen.dart';
@@ -89,6 +90,15 @@ class AppRouter {
                   const PlantDoctorScreen(),
                   state,
                   name: 'plant-doctor',
+                ),
+              ),
+              GoRoute(
+                path: 'plant-recommendation',
+                name: 'plant-recommendation',
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const PlantRecommendationScreen(),
+                  state,
+                  name: 'plant-recommendation',
                 ),
               ),
               GoRoute(
