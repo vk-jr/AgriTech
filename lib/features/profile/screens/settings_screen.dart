@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
+import '../../../core/providers/theme_provider.dart';
 import '../providers/profile_provider.dart';
 import '../../../core/models/profile_model.dart';
 
@@ -122,102 +123,154 @@ class _SettingsScreenState extends State<SettingsScreen> {
             notifications.marketUpdates,
             (value) => _updateNotificationSetting('marketUpdates', value),
           ),
-          
-          const Divider(),
-          
-          Text(
-            'Delivery Methods',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          
-          _buildSwitchTile(
-            'Push Notifications',
-            'Receive notifications on your device',
-            preferences.pushNotifications,
-            (value) => _updateDeliveryMethod('push', value),
-          ),
-          
-          _buildSwitchTile(
-            'Email Notifications',
-            'Receive notifications via email',
-            preferences.emailNotifications,
-            (value) => _updateDeliveryMethod('email', value),
-          ),
-          
-          _buildSwitchTile(
-            'SMS Notifications',
-            'Receive notifications via SMS',
-            preferences.smsNotifications,
-            (value) => _updateDeliveryMethod('sms', value),
-          ),
         ],
       ),
     );
   }
 
   Widget _buildAppSettings(BuildContext context, ProfileProvider provider) {
-    final preferences = provider.userProfile!.preferences;
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        final preferences = provider.userProfile!.preferences;
 
-    return CustomCard(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'App Settings',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+        return CustomCard(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'App Settings',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Theme Selection
+              _buildThemeSelector(context, themeProvider),
+              
+              const Divider(),
+              
+              _buildDropdownTile(
+                'Language',
+                'App language',
+                preferences.language,
+                ['en', 'hi', 'mr'],
+                ['English', 'Hindi', 'Marathi'],
+                (value) => _updateAppSetting('language', value),
+              ),
+              
+              _buildDropdownTile(
+                'Currency',
+                'Display currency',
+                preferences.currency,
+                ['INR', 'USD', 'EUR'],
+                ['Indian Rupee (₹)', 'US Dollar (\$)', 'Euro (€)'],
+                (value) => _updateAppSetting('currency', value),
+              ),
+              
+              _buildDropdownTile(
+                'Temperature Unit',
+                'Temperature display',
+                preferences.temperatureUnit,
+                ['celsius', 'fahrenheit'],
+                ['Celsius (°C)', 'Fahrenheit (°F)'],
+                (value) => _updateAppSetting('temperatureUnit', value),
+              ),
+              
+              _buildDropdownTile(
+                'Measurement Unit',
+                'Distance and area measurements',
+                preferences.measurementUnit,
+                ['metric', 'imperial'],
+                ['Metric (km, hectares)', 'Imperial (miles, acres)'],
+                (value) => _updateAppSetting('measurementUnit', value),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          
-          _buildSwitchTile(
-            'Dark Mode',
-            'Use dark theme',
-            preferences.darkMode,
-            (value) => _updateAppSetting('darkMode', value),
+        );
+      },
+    );
+  }
+
+  Widget _buildThemeSelector(BuildContext context, ThemeProvider themeProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Theme',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
           ),
-          
-          _buildDropdownTile(
-            'Language',
-            'App language',
-            preferences.language,
-            ['en', 'hi', 'mr'],
-            ['English', 'Hindi', 'Marathi'],
-            (value) => _updateAppSetting('language', value),
-          ),
-          
-          _buildDropdownTile(
-            'Currency',
-            'Display currency',
-            preferences.currency,
-            ['INR', 'USD', 'EUR'],
-            ['Indian Rupee (₹)', 'US Dollar (\$)', 'Euro (€)'],
-            (value) => _updateAppSetting('currency', value),
-          ),
-          
-          _buildDropdownTile(
-            'Temperature Unit',
-            'Temperature display',
-            preferences.temperatureUnit,
-            ['celsius', 'fahrenheit'],
-            ['Celsius (°C)', 'Fahrenheit (°F)'],
-            (value) => _updateAppSetting('temperatureUnit', value),
-          ),
-          
-          _buildDropdownTile(
-            'Measurement Unit',
-            'Distance and area measurements',
-            preferences.measurementUnit,
-            ['metric', 'imperial'],
-            ['Metric (km, hectares)', 'Imperial (miles, acres)'],
-            (value) => _updateAppSetting('measurementUnit', value),
-          ),
-        ],
+        ),
+        const SizedBox(height: 8),
+        
+        // Light Theme Option
+        _buildThemeOption(
+          context,
+          'Light Theme',
+          'Use light colors and white background',
+          Icons.light_mode,
+          themeProvider.isLightMode,
+          () => themeProvider.setLightTheme(),
+        ),
+        
+        // Dark Theme Option
+        _buildThemeOption(
+          context,
+          'Dark Theme',
+          'Use dark colors and black background',
+          Icons.dark_mode,
+          themeProvider.isDarkMode,
+          () => themeProvider.setDarkTheme(),
+        ),
+        
+        // System Theme Option
+        _buildThemeOption(
+          context,
+          'System Theme',
+          'Follow your device theme settings',
+          Icons.settings_system_daydream,
+          themeProvider.isSystemMode,
+          () => themeProvider.setSystemTheme(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildThemeOption(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isSelected 
+            ? Theme.of(context).colorScheme.primary 
+            : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
       ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          color: isSelected 
+              ? Theme.of(context).colorScheme.primary 
+              : null,
+        ),
+      ),
+      subtitle: Text(subtitle),
+      trailing: isSelected 
+          ? Icon(
+              Icons.check_circle,
+              color: Theme.of(context).colorScheme.primary,
+            )
+          : null,
+      onTap: onTap,
+      contentPadding: EdgeInsets.zero,
     );
   }
 
@@ -448,14 +501,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$setting notification ${value ? 'enabled' : 'disabled'}'),
-      ),
-    );
-  }
-
-  void _updateDeliveryMethod(String method, bool value) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$method notifications ${value ? 'enabled' : 'disabled'}'),
       ),
     );
   }
