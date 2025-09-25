@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Color Palette - Earthy and Natural
-  static const Color primaryGreen = Color(0xFF2E7D32);
-  static const Color lightGreen = Color(0xFF4CAF50);
-  static const Color darkGreen = Color(0xFF1B5E20);
-  static const Color accentBrown = Color(0xFF8D6E63);
-  static const Color lightBrown = Color(0xFFBCAAA4);
-  static const Color earthYellow = Color(0xFFFFC107);
-  static const Color skyBlue = Color(0xFF03DAC6);
-  static const Color warningOrange = Color(0xFFFF9800);
-  static const Color errorRed = Color(0xFFE53935);
+  // Color Palette - Modern and Refined
+  static const Color primaryGreen = Color(0xFF22C55E); // Modern bright green
+  static const Color lightGreen = Color(0xFF4ADE80);
+  static const Color darkGreen = Color(0xFF16A34A);
+  static const Color accentBrown = Color(0xFF92400E);
+  static const Color lightBrown = Color(0xFFA16207);
+  static const Color earthYellow = Color(0xFFF59E0B); // Modern amber
+  static const Color skyBlue = Color(0xFF0EA5E9); // Modern sky blue
+  static const Color warningOrange = Color(0xFFF97316);
+  static const Color errorRed = Color(0xFFEF4444);
   
-  // Neutral Colors
-  static const Color backgroundLight = Color(0xFFF8F9FA);
+  // Neutral Colors - Modern grays
+  static const Color backgroundLight = Color(0xFFFAFAFA);
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color onSurfaceLight = Color(0xFF1C1B1F);
-  static const Color onBackgroundLight = Color(0xFF1C1B1F);
+  static const Color onSurfaceLight = Color(0xFF0F172A);
+  static const Color onBackgroundLight = Color(0xFF0F172A);
   
-  static const Color backgroundDark = Color(0xFF121212);
-  static const Color surfaceDark = Color(0xFF1E1E1E);
-  static const Color onSurfaceDark = Color(0xFFE6E1E5);
-  static const Color onBackgroundDark = Color(0xFFE6E1E5);
+  static const Color backgroundDark = Color(0xFF0F172A);
+  static const Color surfaceDark = Color(0xFF1E293B);
+  static const Color onSurfaceDark = Color(0xFFF1F5F9);
+  static const Color onBackgroundDark = Color(0xFFF1F5F9);
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -61,9 +61,9 @@ class AppTheme {
         elevation: 8,
       ),
       cardTheme: CardThemeData(
-        elevation: 4,
+        elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16), // Modern rounded edges
         ),
         color: surfaceLight,
       ),
@@ -71,10 +71,10 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryGreen,
           foregroundColor: Colors.white,
-          elevation: 2,
+          elevation: 1,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12), // Modern rounded edges
           ),
           textStyle: const TextStyle(
             fontFamily: 'Poppins',
@@ -85,11 +85,11 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12), // Modern rounded edges
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12), // Modern rounded edges
           borderSide: const BorderSide(color: primaryGreen, width: 2),
         ),
         filled: true,
@@ -187,9 +187,9 @@ class AppTheme {
         elevation: 8,
       ),
       cardTheme: CardThemeData(
-        elevation: 4,
+        elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16), // Modern rounded edges
         ),
         color: surfaceDark,
       ),
@@ -197,10 +197,10 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: lightGreen,
           foregroundColor: Colors.black,
-          elevation: 2,
+          elevation: 1,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12), // Modern rounded edges
           ),
           textStyle: const TextStyle(
             fontFamily: 'Poppins',
@@ -211,11 +211,11 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12), // Modern rounded edges
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12), // Modern rounded edges
           borderSide: const BorderSide(color: lightGreen, width: 2),
         ),
         filled: true,

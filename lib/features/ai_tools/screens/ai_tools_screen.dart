@@ -76,8 +76,12 @@ class AIToolsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.earthYellow.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
+              color: AppTheme.earthYellow.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: AppTheme.earthYellow.withOpacity(0.3),
+                width: 1,
+              ),
             ),
             child: Row(
               children: [
@@ -125,7 +129,11 @@ class AIToolsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: AppTheme.primaryGreen.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppTheme.primaryGreen.withOpacity(0.3),
+                width: 1,
+              ),
             ),
             child: Text(
               'Popular',
@@ -148,7 +156,11 @@ class AIToolsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: AppTheme.accentBrown.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppTheme.accentBrown.withOpacity(0.3),
+                width: 1,
+              ),
             ),
             child: Text(
               'Smart',
@@ -171,7 +183,11 @@ class AIToolsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: AppTheme.errorRed.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppTheme.errorRed.withOpacity(0.3),
+                width: 1,
+              ),
             ),
             child: Text(
               'New',

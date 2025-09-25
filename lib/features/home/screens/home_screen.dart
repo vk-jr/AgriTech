@@ -172,51 +172,54 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         final stats = provider.stats;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Farm Overview',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+        return CustomCard(
+          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Farm Overview',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 1.3,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                children: [
+                  StatCard(
+                    title: 'Active Crops',
+                    value: '${stats.activeCrops}',
+                    icon: MdiIcons.sprout,
+                    color: AppTheme.primaryGreen,
                   ),
-            ),
-            const SizedBox(height: 12),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.3,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              children: [
-                StatCard(
-                  title: 'Active Crops',
-                  value: '${stats.activeCrops}',
-                  icon: MdiIcons.sprout,
-                  color: AppTheme.primaryGreen,
-                ),
-                StatCard(
-                  title: 'Total Yield',
-                  value: '${stats.totalYield}T',
-                  icon: MdiIcons.weight,
-                  color: AppTheme.earthYellow,
-                ),
-                StatCard(
-                  title: 'Monthly Revenue',
-                  value: '₹${(stats.monthlyRevenue / 1000).toStringAsFixed(0)}K',
-                  icon: MdiIcons.currencyInr,
-                  color: AppTheme.lightGreen,
-                ),
-                StatCard(
-                  title: 'Water Saved',
-                  value: '${stats.waterSaved}L',
-                  icon: MdiIcons.waterOutline,
-                  color: AppTheme.skyBlue,
-                ),
-              ],
-            ),
-          ],
+                  StatCard(
+                    title: 'Total Yield',
+                    value: '${stats.totalYield}T',
+                    icon: MdiIcons.weight,
+                    color: AppTheme.earthYellow,
+                  ),
+                  StatCard(
+                    title: 'Monthly Revenue',
+                    value: '₹${(stats.monthlyRevenue / 1000).toStringAsFixed(0)}K',
+                    icon: MdiIcons.currencyInr,
+                    color: AppTheme.lightGreen,
+                  ),
+                  StatCard(
+                    title: 'Water Saved',
+                    value: '${stats.waterSaved}L',
+                    icon: MdiIcons.waterOutline,
+                    color: AppTheme.skyBlue,
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
@@ -232,30 +235,33 @@ class _HomeScreenState extends State<HomeScreen> {
           return const SizedBox.shrink();
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Alerts & Notifications',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // TODO: Show all alerts
-                  },
-                  child: const Text('View All'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ...weatherAlerts.take(2).map((alert) => _buildWeatherAlert(context, alert)),
-            ...irrigationAlerts.take(2).map((alert) => _buildIrrigationAlert(context, alert)),
-          ],
+        return CustomCard(
+          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Alerts & Notifications',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // TODO: Show all alerts
+                    },
+                    child: const Text('View All'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ...weatherAlerts.take(2).map((alert) => _buildWeatherAlert(context, alert)),
+              ...irrigationAlerts.take(2).map((alert) => _buildIrrigationAlert(context, alert)),
+            ],
+          ),
         );
       },
     );
@@ -284,9 +290,17 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
     }
 
-    return CustomCard(
+    return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      backgroundColor: alertColor.withOpacity(0.1),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: alertColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: alertColor.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
       child: Row(
         children: [
           Icon(alertIcon, color: alertColor, size: 24),
@@ -334,9 +348,17 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
     }
 
-    return CustomCard(
+    return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      backgroundColor: urgencyColor.withOpacity(0.1),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: urgencyColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: urgencyColor.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
       child: Row(
         children: [
           Icon(MdiIcons.waterOutline, color: urgencyColor, size: 24),
@@ -380,28 +402,31 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildQuickActionsSection(BuildContext context) {
     return Consumer<DashboardProvider>(
       builder: (context, provider, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Quick Actions',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.2,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              children: provider.quickActions.map((action) {
-                return _buildQuickActionCard(context, action);
-              }).toList(),
-            ),
-          ],
+        return CustomCard(
+          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Quick Actions',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                childAspectRatio: 1.2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                children: provider.quickActions.map((action) {
+                  return _buildQuickActionCard(context, action);
+                }).toList(),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -433,42 +458,52 @@ class _HomeScreenState extends State<HomeScreen> {
         color = Colors.grey;
     }
 
-    return CustomCard(
-      onTap: () => context.go(action.route),
-      backgroundColor: color.withOpacity(0.1),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 28),
-            const SizedBox(height: 6),
-            Flexible(
-              child: Text(
-                action.title,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Flexible(
-              child: Text(
-                action.description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 11,
+    return Container(
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: InkWell(
+        onTap: () => context.go(action.route),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 28),
+              const SizedBox(height: 8),
+              Flexible(
+                child: Text(
+                  action.title,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Flexible(
+                child: Text(
+                  action.description,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 11,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -480,98 +515,101 @@ class _HomeScreenState extends State<HomeScreen> {
         final tips = provider.sustainabilityTips;
         if (tips.isEmpty) return const SizedBox.shrink();
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Sustainability Tips',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // TODO: Show all tips
-                  },
-                  child: const Text('View All'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 160,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: tips.length,
-                itemBuilder: (context, index) {
-                  final tip = tips[index];
-                  return Container(
-                    width: 280,
-                    margin: const EdgeInsets.only(right: 12),
-                    child: CustomCard(
-                      backgroundColor: AppTheme.lightGreen.withOpacity(0.1),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  tip.title,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.primaryGreen,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  '${tip.impactScore}/10',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
+        return CustomCard(
+          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Sustainability Tips',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // TODO: Show all tips
+                    },
+                    child: const Text('View All'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 160,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tips.length,
+                  itemBuilder: (context, index) {
+                    final tip = tips[index];
+                    return Container(
+                      width: 280,
+                      margin: const EdgeInsets.only(right: 12),
+                      child: CustomCard(
+                        backgroundColor: AppTheme.lightGreen.withOpacity(0.1),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    tip.title,
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            tip.category,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: AppTheme.primaryGreen,
-                                  fontWeight: FontWeight.w500,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primaryGreen,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    '${tip.impactScore}/10',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: Text(
-                              tip.description,
-                              style: Theme.of(context).textTheme.bodySmall,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
+                              ],
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              tip.category,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AppTheme.primaryGreen,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                            const SizedBox(height: 8),
+                            Expanded(
+                              child: Text(
+                                tip.description,
+                                style: Theme.of(context).textTheme.bodySmall,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

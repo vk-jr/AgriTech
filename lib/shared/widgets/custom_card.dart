@@ -28,11 +28,20 @@ class CustomCard extends StatelessWidget {
       margin: margin ?? const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: backgroundColor ?? Theme.of(context).colorScheme.surface,
-        borderRadius: borderRadius ?? BorderRadius.circular(16),
+        borderRadius: borderRadius ?? BorderRadius.circular(16), // Modern rounded edges
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.1),
+          width: 1,
+        ),
         boxShadow: showShadow
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.02),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -92,7 +101,12 @@ class FeatureCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: (iconColor ?? Theme.of(context).colorScheme.primary)
                   .withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12), // Modern rounded edges
+              border: Border.all(
+                color: (iconColor ?? Theme.of(context).colorScheme.primary)
+                    .withOpacity(0.2),
+                width: 1,
+              ),
             ),
             child: Icon(
               icon,
@@ -164,53 +178,64 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cardColor = color ?? Theme.of(context).colorScheme.primary;
 
-    return CustomCard(
-      onTap: onTap,
-      backgroundColor: cardColor.withOpacity(0.1),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                icon,
-                color: cardColor,
-                size: 24,
-              ),
-              if (onTap != null)
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: cardColor.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey[400],
-                ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  icon,
                   color: cardColor,
-                  fontWeight: FontWeight.bold,
+                  size: 24,
                 ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[700],
-                ),
-          ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 4),
+                if (onTap != null)
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.grey[400],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
             Text(
-              subtitle!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
+              value,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: cardColor,
+                    fontWeight: FontWeight.bold,
                   ),
             ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[700],
+                  ),
+            ),
+            if (subtitle != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                subtitle!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
