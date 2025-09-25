@@ -15,6 +15,7 @@ import '../../features/community/screens/community_screen.dart';
 import '../../features/community/screens/forum_post_detail_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/profile/screens/settings_screen.dart';
+import '../utils/page_transitions.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -24,12 +25,20 @@ class AppRouter {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => const LoginScreen(),
+        pageBuilder: (context, state) => PageTransitions.fadeWithScale(
+          const LoginScreen(),
+          state,
+          name: 'login',
+        ),
       ),
       GoRoute(
         path: '/register',
         name: 'register',
-        builder: (context, state) => const RegisterScreen(),
+        pageBuilder: (context, state) => PageTransitions.slideFromRight(
+          const RegisterScreen(),
+          state,
+          name: 'register',
+        ),
       ),
       
       // Main Navigation
@@ -39,46 +48,78 @@ class AppRouter {
           GoRoute(
             path: '/main',
             name: 'main',
-            builder: (context, state) => const HomeScreen(),
+            pageBuilder: (context, state) => PageTransitions.smoothFade(
+              const HomeScreen(),
+              state,
+              name: 'main',
+            ),
           ),
           GoRoute(
             path: '/home',
             name: 'home',
-            builder: (context, state) => const HomeScreen(),
+            pageBuilder: (context, state) => PageTransitions.smoothFade(
+              const HomeScreen(),
+              state,
+              name: 'home',
+            ),
           ),
           GoRoute(
             path: '/ai-tools',
             name: 'ai-tools',
-            builder: (context, state) => const AIToolsScreen(),
+            pageBuilder: (context, state) => PageTransitions.smoothFade(
+              const AIToolsScreen(),
+              state,
+              name: 'ai-tools',
+            ),
             routes: [
               GoRoute(
                 path: 'crop-suggestion',
                 name: 'crop-suggestion',
-                builder: (context, state) => const CropSuggestionScreen(),
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const CropSuggestionScreen(),
+                  state,
+                  name: 'crop-suggestion',
+                ),
               ),
               GoRoute(
                 path: 'plant-doctor',
                 name: 'plant-doctor',
-                builder: (context, state) => const PlantDoctorScreen(),
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const PlantDoctorScreen(),
+                  state,
+                  name: 'plant-doctor',
+                ),
               ),
               GoRoute(
                 path: 'ar-view',
                 name: 'ar-view',
-                builder: (context, state) => const ARViewScreen(),
+                pageBuilder: (context, state) => PageTransitions.heroTransition(
+                  const ARViewScreen(),
+                  state,
+                  name: 'ar-view',
+                ),
               ),
             ],
           ),
           GoRoute(
             path: '/market',
             name: 'market',
-            builder: (context, state) => const MarketScreen(),
+            pageBuilder: (context, state) => PageTransitions.smoothFade(
+              const MarketScreen(),
+              state,
+              name: 'market',
+            ),
             routes: [
               GoRoute(
                 path: 'product/:productId',
                 name: 'product-detail',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final productId = state.pathParameters['productId']!;
-                  return ProductDetailScreen(productId: productId);
+                  return PageTransitions.heroTransition(
+                    ProductDetailScreen(productId: productId),
+                    state,
+                    name: 'product-detail',
+                  );
                 },
               ),
             ],
@@ -86,14 +127,22 @@ class AppRouter {
           GoRoute(
             path: '/community',
             name: 'community',
-            builder: (context, state) => const CommunityScreen(),
+            pageBuilder: (context, state) => PageTransitions.smoothFade(
+              const CommunityScreen(),
+              state,
+              name: 'community',
+            ),
             routes: [
               GoRoute(
                 path: 'post/:postId',
                 name: 'forum-post-detail',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final postId = state.pathParameters['postId']!;
-                  return ForumPostDetailScreen(postId: postId);
+                  return PageTransitions.slideFromBottom(
+                    ForumPostDetailScreen(postId: postId),
+                    state,
+                    name: 'forum-post-detail',
+                  );
                 },
               ),
             ],
@@ -101,12 +150,20 @@ class AppRouter {
           GoRoute(
             path: '/profile',
             name: 'profile',
-            builder: (context, state) => const ProfileScreen(),
+            pageBuilder: (context, state) => PageTransitions.smoothFade(
+              const ProfileScreen(),
+              state,
+              name: 'profile',
+            ),
             routes: [
               GoRoute(
                 path: 'settings',
                 name: 'settings',
-                builder: (context, state) => const SettingsScreen(),
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const SettingsScreen(),
+                  state,
+                  name: 'settings',
+                ),
               ),
             ],
           ),
