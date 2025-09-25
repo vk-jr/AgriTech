@@ -121,8 +121,8 @@ class AIToolsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         FeatureCard(
-          title: 'Crop Suggestion AI',
-          subtitle: 'Get personalized crop recommendations based on your soil, climate, and market conditions',
+          title: AppLocalizations.of(context)!.cropSuggestionAi,
+          subtitle: AppLocalizations.of(context)!.cropSuggestionAiDesc,
           icon: MdiIcons.sproutOutline,
           iconColor: AppTheme.primaryGreen,
           onTap: () => context.go('/ai-tools/crop-suggestion'),

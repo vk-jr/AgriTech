@@ -473,7 +473,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mainAiTools => 'Main Tools';
 
   @override
-  String get cropSuggestionAi => 'Crop Suggestion AI';
+  String get cropSuggestionAi => 'Crop Suggestion';
 
   @override
   String get cropSuggestionAiDesc =>

@@ -483,7 +483,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get mainAiTools => 'പ്രധാന ടൂളുകൾ';
 
   @override
-  String get cropSuggestionAi => 'വിള നിർദ്ദേശ AI';
+  String get cropSuggestionAi => 'വിള നിർദ്ദേശം';
 
   @override
   String get cropSuggestionAiDesc =>

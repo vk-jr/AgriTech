@@ -473,7 +473,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get mainAiTools => 'मुख्य टूल्स';
 
   @override
-  String get cropSuggestionAi => 'फसल सुझाव AI';
+  String get cropSuggestionAi => 'फसल सुझाव';
 
   @override
   String get cropSuggestionAiDesc =>

@@ -1003,7 +1003,7 @@ abstract class AppLocalizations {
   /// No description provided for @cropSuggestionAi.
   ///
   /// In en, this message translates to:
-  /// **'Crop Suggestion AI'**
+  /// **'Crop Suggestion'**
   String get cropSuggestionAi;
 
   /// No description provided for @cropSuggestionAiDesc.
