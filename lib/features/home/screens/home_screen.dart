@@ -32,7 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: RefreshIndicator(
-        onRefresh: () => context.read<DashboardProvider>().refreshData(),
+        onRefresh: () async {
+          await context.read<DashboardProvider>().refreshData();
+          await context.read<WeatherProvider>().refreshWeather();
+        },
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
@@ -40,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(16),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
+                  _buildLocationHeader(context),
+                  const SizedBox(height: 16),
                   _buildWelcomeSection(context),
                   const SizedBox(height: 16),
                   _buildStatsSection(context),
@@ -95,6 +100,97 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () => context.go('/profile/settings'),
         ),
       ],
+    );
+  }
+
+  Widget _buildLocationHeader(BuildContext context) {
+    return Consumer<WeatherProvider>(
+      builder: (context, weatherProvider, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryGreen.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppTheme.primaryGreen.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: AppTheme.primaryGreen,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Current Location',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppTheme.primaryGreen,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      weatherProvider.currentLocation ?? 'Getting location...',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              if (weatherProvider.currentWeather != null) ...[
+                const SizedBox(width: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryGreen,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        weatherProvider.getWeatherIcon(
+                          weatherProvider.currentWeather!['weather'][0]['main'],
+                        ),
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        weatherProvider.getTemperature(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (weatherProvider.isLoadingLocation) ...[
+                const SizedBox(width: 12),
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 

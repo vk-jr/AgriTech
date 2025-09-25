@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 
 import '../providers/weather_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
@@ -38,6 +39,10 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
         title: const Text('Weather Prediction'),
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/ai-tools'),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
