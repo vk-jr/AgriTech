@@ -9,6 +9,7 @@ import '../../features/ai_tools/screens/ai_tools_screen.dart';
 import '../../features/ai_tools/screens/crop_suggestion_screen.dart';
 import '../../features/ai_tools/screens/plant_doctor_screen.dart';
 import '../../features/ai_tools/screens/ar_view_screen.dart';
+import '../../features/ai_tools/screens/satellite_analysis_screen.dart';
 import '../../features/market/screens/market_screen.dart';
 import '../../features/market/screens/product_detail_screen.dart';
 import '../../features/community/screens/community_screen.dart';
@@ -97,6 +98,15 @@ class AppRouter {
                   const ARViewScreen(),
                   state,
                   name: 'ar-view',
+                ),
+              ),
+              GoRoute(
+                path: 'satellite-analysis',
+                name: 'satellite-analysis',
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const SatelliteAnalysisScreen(),
+                  state,
+                  name: 'satellite-analysis',
                 ),
               ),
             ],

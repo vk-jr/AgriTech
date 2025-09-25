@@ -250,38 +250,44 @@ class AIToolsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Coming Soon',
+          'More Features',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 12),
         CustomCard(
-          backgroundColor: Colors.grey[100],
+          onTap: () => context.go('/ai-tools/satellite-analysis'),
+          backgroundColor: AppTheme.skyBlue.withOpacity(0.1),
           child: Column(
             children: [
               Row(
                 children: [
                   Icon(
-                    MdiIcons.rocketLaunchOutline,
-                    color: Colors.grey[600],
+                    MdiIcons.satelliteVariant,
+                    color: AppTheme.skyBlue,
                     size: 24,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'More AI Features in Development',
+                      'Satellite Farm Analysis',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey[700],
+                            color: AppTheme.skyBlue,
                           ),
                     ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppTheme.skyBlue,
+                    size: 16,
                   ),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                'We\'re working on exciting new AI features including pest identification, yield prediction, and smart irrigation scheduling. Stay tuned!',
+                'Get real-time satellite monitoring and AI-powered analysis of your farm. Monitor crop health, soil conditions, and get smart recommendations.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -290,19 +296,13 @@ class AIToolsScreen extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Thank you for your interest! We\'ll notify you when new features are available.'),
-                          ),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.grey[600],
-                        side: BorderSide(color: Colors.grey[400]!),
+                    child: ElevatedButton(
+                      onPressed: () => context.go('/ai-tools/satellite-analysis'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.skyBlue,
+                        foregroundColor: Colors.white,
                       ),
-                      child: const Text('Get Notified'),
+                      child: const Text('Explore Satellite Analysis'),
                     ),
                   ),
                 ],
