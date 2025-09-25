@@ -52,17 +52,17 @@ class AppRouter {
             builder: (context, state) => const AIToolsScreen(),
             routes: [
               GoRoute(
-                path: '/crop-suggestion',
+                path: 'crop-suggestion',
                 name: 'crop-suggestion',
                 builder: (context, state) => const CropSuggestionScreen(),
               ),
               GoRoute(
-                path: '/plant-doctor',
+                path: 'plant-doctor',
                 name: 'plant-doctor',
                 builder: (context, state) => const PlantDoctorScreen(),
               ),
               GoRoute(
-                path: '/ar-view',
+                path: 'ar-view',
                 name: 'ar-view',
                 builder: (context, state) => const ARViewScreen(),
               ),
@@ -74,7 +74,7 @@ class AppRouter {
             builder: (context, state) => const MarketScreen(),
             routes: [
               GoRoute(
-                path: '/product/:productId',
+                path: 'product/:productId',
                 name: 'product-detail',
                 builder: (context, state) {
                   final productId = state.pathParameters['productId']!;
@@ -89,7 +89,7 @@ class AppRouter {
             builder: (context, state) => const CommunityScreen(),
             routes: [
               GoRoute(
-                path: '/post/:postId',
+                path: 'post/:postId',
                 name: 'forum-post-detail',
                 builder: (context, state) {
                   final postId = state.pathParameters['postId']!;
@@ -104,7 +104,7 @@ class AppRouter {
             builder: (context, state) => const ProfileScreen(),
             routes: [
               GoRoute(
-                path: '/settings',
+                path: 'settings',
                 name: 'settings',
                 builder: (context, state) => const SettingsScreen(),
               ),

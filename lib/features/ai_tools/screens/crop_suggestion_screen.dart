@@ -235,9 +235,9 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: _landSizeController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Enter land size in acres',
-            prefixIcon: Icon(MdiIcons.landFields),
+            prefixIcon: Icon(Icons.landscape),
             suffixText: 'acres',
           ),
           keyboardType: TextInputType.number,
@@ -272,9 +272,9 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: _budgetController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Enter your budget',
-            prefixIcon: Icon(MdiIcons.currencyInr),
+            prefixIcon: const Icon(Icons.currency_rupee),
             suffixText: '₹',
           ),
           keyboardType: TextInputType.number,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../providers/auth_provider.dart';
+import '../../../core/models/user_model.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -321,9 +322,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _handleRegister(BuildContext context, AuthProvider authProvider) async {
     if (_formKey.currentState!.validate() && _acceptTerms) {
       final success = await authProvider.register(
-        _nameController.text.trim(),
-        _emailController.text.trim(),
-        _passwordController.text,
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        userType: UserType.farmer,
       );
       
       if (success && mounted) {
