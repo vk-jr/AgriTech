@@ -139,6 +139,35 @@ class AIToolsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         FeatureCard(
+          title: 'Room Plant Recommendation AI',
+          subtitle: 'Get personalized indoor plant suggestions perfect for your room conditions and small-scale growing',
+          icon: MdiIcons.flowerOutline,
+          iconColor: AppTheme.accentBrown,
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Room Plant Recommendation AI coming soon!'),
+              ),
+            );
+          },
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppTheme.accentBrown.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'Indoor',
+              style: TextStyle(
+                color: AppTheme.accentBrown,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        FeatureCard(
           title: 'Plant Doctor',
           subtitle: 'Upload photos of diseased plants to get instant AI diagnosis and treatment recommendations',
           icon: MdiIcons.medicalBag,
