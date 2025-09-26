@@ -285,7 +285,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.85, // Increased from 0.8 to give more height
+        childAspectRatio: 0.9, // Increased to 0.9 for more height
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),
@@ -302,10 +302,11 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
       onTap: () => context.go('/market/product/${product.id}'),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Product Image
           Expanded(
-            flex: 3,
+            flex: 5,
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -330,7 +331,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                                 child: Center(
                                   child: Icon(
                                     _getCategoryIcon(product.category),
-                                    size: 48,
+                                    size: 40,
                                     color: Colors.grey[400],
                                   ),
                                 ),
@@ -342,12 +343,11 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                                 width: double.infinity,
                                 height: double.infinity,
                                 color: Colors.grey[200],
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
-                                        : null,
+                                child: const Center(
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
                                   ),
                                 ),
                               );
@@ -360,7 +360,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                             child: Center(
                               child: Icon(
                                 _getCategoryIcon(product.category),
-                                size: 48,
+                                size: 40,
                                 color: Colors.grey[400],
                               ),
                             ),
@@ -368,19 +368,19 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                   ),
                   if (product.discount > 0)
                     Positioned(
-                      top: 6,
-                      right: 6,
+                      top: 4,
+                      right: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          '${product.discount.toInt()}% OFF',
+                          '${product.discount.toInt()}%',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 8,
+                            fontSize: 7,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -388,19 +388,19 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                     ),
                   if (product.isOrganic)
                     Positioned(
-                      top: 6,
-                      left: 6,
+                      top: 4,
+                      left: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
                         decoration: BoxDecoration(
                           color: Colors.green,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
-                          'ORGANIC',
+                          'ORG',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 7,
+                            fontSize: 6,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -413,9 +413,9 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
           
           // Product Details
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -424,30 +424,30 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                     product.name,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
+                      fontSize: 11,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: 12),
-                      const SizedBox(width: 2),
+                      Icon(Icons.star, color: Colors.amber, size: 10),
+                      const SizedBox(width: 1),
                       Text(
                         '${product.rating}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 10,
+                          fontSize: 9,
                         ),
                       ),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: 1),
                       Flexible(
                         child: Text(
                           '(${product.reviewCount})',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.grey[600],
-                            fontSize: 10,
+                            fontSize: 9,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -455,48 +455,42 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                     ],
                   ),
                   const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                  if (product.discount > 0)
+                    Text(
+                      '₹${product.price.toStringAsFixed(0)}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey[600],
+                        fontSize: 8,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  Row(
                     children: [
-                      if (product.discount > 0)
-                        Text(
-                          '₹${product.price.toStringAsFixed(0)}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey[600],
-                            fontSize: 9,
+                      Expanded(
+                        child: Text(
+                          '₹${product.discountedPrice.toStringAsFixed(0)}/${product.unit}',
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 10,
                           ),
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '₹${product.discountedPrice.toStringAsFixed(0)}/${product.unit}',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 11,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
+                      ),
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: IconButton(
+                          icon: const Icon(Icons.add_shopping_cart, size: 10),
+                          onPressed: () => _addToCart(context, product, provider),
+                          style: IconButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.zero,
                           ),
-                          SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: IconButton(
-                              icon: const Icon(Icons.add_shopping_cart, size: 12),
-                              onPressed: () => _addToCart(context, product, provider),
-                              style: IconButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.zero,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),

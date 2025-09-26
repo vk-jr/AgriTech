@@ -124,14 +124,196 @@ class _HomeScreenState extends State<HomeScreen> {
         background: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [AppTheme.primaryGreen, AppTheme.darkGreen],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF87CEEB), // Sky blue at top
+                Color(0xFF98FB98), // Light green in middle
+                AppTheme.primaryGreen, // Dark green at bottom
+              ],
+              stops: [0.0, 0.4, 1.0],
             ),
           ),
           child: Stack(
             children: [
-              // Background plant decorations
+              // Sky with sun and clouds
+              Positioned(
+                top: 8,
+                right: 25,
+                child: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFD700),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.yellow.withOpacity(0.4),
+                        blurRadius: 15,
+                        spreadRadius: 3,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.wb_sunny,
+                    color: Colors.white,
+                    size: 22,
+                  ),
+                ),
+              ),
+              
+              // Beautiful clouds
+              Positioned(
+                top: 5,
+                left: 20,
+                child: Icon(
+                  Icons.cloud,
+                  color: Colors.white.withOpacity(0.8),
+                  size: 28,
+                ),
+              ),
+              Positioned(
+                top: 12,
+                left: 45,
+                child: Icon(
+                  Icons.cloud,
+                  color: Colors.white.withOpacity(0.6),
+                  size: 22,
+                ),
+              ),
+              
+              // Mountain silhouette
+              Positioned(
+                bottom: 25,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 30,
+                  child: CustomPaint(
+                    size: Size(MediaQuery.of(context).size.width, 30),
+                    painter: _MountainPainter(),
+                  ),
+                ),
+              ),
+              
+              // Farm field rows at bottom
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 25,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color(0xFF228B22).withOpacity(0.6),
+                        const Color(0xFF006400),
+                      ],
+                    ),
+                  ),
+                  child: Row(
+                    children: List.generate(12, (index) => Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.green.withOpacity(0.3),
+                              Colors.green.withOpacity(0.7),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          children: List.generate(3, (cropIndex) => Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.all(0.5),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                            ),
+                          )),
+                        ),
+                      ),
+                    )),
+                  ),
+                ),
+              ),
+              
+              // Farm animals silhouettes
+              Positioned(
+                bottom: 30,
+                left: 30,
+                child: Icon(
+                  MdiIcons.cow,
+                  color: Colors.black.withOpacity(0.3),
+                  size: 20,
+                ),
+              ),
+              Positioned(
+                bottom: 32,
+                right: 40,
+                child: Icon(
+                  MdiIcons.sheep,
+                  color: Colors.black.withOpacity(0.3),
+                  size: 18,
+                ),
+              ),
+              
+              // Farming tools and crops scattered beautifully
+              Positioned(
+                top: 20,
+                left: MediaQuery.of(context).size.width * 0.2,
+                child: Icon(
+                  MdiIcons.tractor,
+                  color: Colors.red.withOpacity(0.4),
+                  size: 16,
+                ),
+              ),
+              Positioned(
+                top: 35,
+                right: MediaQuery.of(context).size.width * 0.25,
+                child: Icon(
+                  MdiIcons.barn,
+                  color: Colors.brown.withOpacity(0.4),
+                  size: 18,
+                ),
+              ),
+              
+              // Crop variety
+              Positioned(
+                top: 25,
+                left: MediaQuery.of(context).size.width * 0.15,
+                child: Icon(
+                  MdiIcons.corn,
+                  color: Colors.yellow.withOpacity(0.5),
+                  size: 14,
+                ),
+              ),
+              Positioned(
+                top: 40,
+                left: MediaQuery.of(context).size.width * 0.35,
+                child: Icon(
+                  MdiIcons.carrot,
+                  color: Colors.orange.withOpacity(0.5),
+                  size: 14,
+                ),
+              ),
+              Positioned(
+                top: 30,
+                right: MediaQuery.of(context).size.width * 0.15,
+                child: Icon(
+                  MdiIcons.apple,
+                  color: Colors.red.withOpacity(0.5),
+                  size: 14,
+                ),
+              ),
+              
+              // Enhanced plant decorations
               const Positioned(
                 top: 15,
                 left: -5,
@@ -152,25 +334,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   imageVariant: 2,
                 ),
               ),
-              // Additional decorative elements
+              
+              // Wind turbine
               Positioned(
-                top: 35,
-                left: MediaQuery.of(context).size.width * 0.3,
-                child: const PlantDecoration(
-                  height: 30,
-                  width: 25,
-                  showRight: false,
-                  imageVariant: 1,
-                ),
-              ),
-              Positioned(
-                top: 35,
-                right: MediaQuery.of(context).size.width * 0.3,
-                child: const PlantDecoration(
-                  height: 30,
-                  width: 25,
-                  showLeft: false,
-                  imageVariant: 2,
+                top: 18,
+                left: MediaQuery.of(context).size.width * 0.7,
+                child: Icon(
+                  MdiIcons.windTurbine,
+                  color: Colors.white.withOpacity(0.4),
+                  size: 20,
                 ),
               ),
             ],
@@ -838,4 +1010,30 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+}
+
+class _MountainPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.green.withOpacity(0.4)
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+    
+    // Create mountain silhouette
+    path.moveTo(0, size.height);
+    path.lineTo(size.width * 0.2, size.height * 0.3);
+    path.lineTo(size.width * 0.4, size.height * 0.6);
+    path.lineTo(size.width * 0.6, size.height * 0.2);
+    path.lineTo(size.width * 0.8, size.height * 0.5);
+    path.lineTo(size.width, size.height * 0.4);
+    path.lineTo(size.width, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
