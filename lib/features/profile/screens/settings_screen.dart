@@ -6,7 +6,6 @@ import '../../../shared/widgets/custom_button.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/localization_provider.dart';
 import '../providers/profile_provider.dart';
-import '../../../core/models/profile_model.dart';
 import '../../../l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {

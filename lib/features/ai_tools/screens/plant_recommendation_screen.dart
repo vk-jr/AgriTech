@@ -25,7 +25,7 @@ class _PlantRecommendationScreenState extends State<PlantRecommendationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Row(
           children: [
@@ -112,7 +112,7 @@ class _PlantRecommendationScreenState extends State<PlantRecommendationScreen> {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.lightbulb_outline,
                   color: AppTheme.earthYellow,
                   size: 20,
@@ -325,7 +325,7 @@ class _PlantRecommendationScreenState extends State<PlantRecommendationScreen> {
               ),
             ),
             if (isSelected)
-              Icon(
+              const Icon(
                 Icons.check_circle,
                 color: AppTheme.accentBrown,
                 size: 20,

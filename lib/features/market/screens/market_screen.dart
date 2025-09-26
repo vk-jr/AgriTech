@@ -199,7 +199,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
 
   Widget _buildCategoryFilter(BuildContext context, MarketProvider provider) {
     return DropdownButtonFormField<ProductCategory?>(
-      value: provider.selectedCategory,
+      initialValue: provider.selectedCategory,
       decoration: const InputDecoration(
         labelText: 'Category',
         prefixIcon: Icon(Icons.category),
@@ -433,7 +433,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: 10),
+                      const Icon(Icons.star, color: Colors.amber, size: 10),
                       const SizedBox(width: 1),
                       Text(
                         '${product.rating}',
@@ -706,7 +706,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<PaymentMethod>(
-                value: selectedPayment,
+                initialValue: selectedPayment,
                 decoration: const InputDecoration(
                   labelText: 'Payment Method',
                 ),
@@ -1214,9 +1214,9 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Forecast',
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
               Container(
@@ -1232,7 +1232,7 @@ class _MarketScreenState extends State<MarketScreen> with SingleTickerProviderSt
                     Text('Confidence: ${(analysis.forecast.confidence * 100).toInt()}%'),
                     Text('Recommendation: ${analysis.forecast.recommendation.toUpperCase()}'),
                     const SizedBox(height: 8),
-                    Text('Factors:', style: const TextStyle(fontWeight: FontWeight.w500)),
+                    const Text('Factors:', style: TextStyle(fontWeight: FontWeight.w500)),
                     ...analysis.forecast.factors.map((factor) => Text('• $factor')),
                   ],
                 ),

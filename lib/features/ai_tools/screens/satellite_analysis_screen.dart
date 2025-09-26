@@ -42,7 +42,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Row(
           children: [
@@ -145,11 +145,11 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
                         height: 120,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: RadialGradient(
+                          gradient: const RadialGradient(
                             colors: [
-                              const Color(0xFF4CAF50),
-                              const Color(0xFF2196F3),
-                              const Color(0xFF1976D2),
+                              Color(0xFF4CAF50),
+                              Color(0xFF2196F3),
+                              Color(0xFF1976D2),
                             ],
                           ),
                           boxShadow: [
@@ -300,7 +300,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -488,7 +488,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.info_outline,
                   color: AppTheme.skyBlue,
                   size: 24,
@@ -514,7 +514,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle,
                   color: AppTheme.primaryGreen,
                   size: 16,
@@ -533,7 +533,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle,
                   color: AppTheme.primaryGreen,
                   size: 16,
@@ -552,7 +552,7 @@ class _SatelliteAnalysisScreenState extends State<SatelliteAnalysisScreen>
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle,
                   color: AppTheme.primaryGreen,
                   size: 16,

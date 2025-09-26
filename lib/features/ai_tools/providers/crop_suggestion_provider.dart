@@ -28,7 +28,7 @@ class CropSuggestionProvider extends ChangeNotifier {
   double _budget = 0.0;
   bool _isOrganicPreferred = false;
   List<String> _marketDemand = [];
-  List<ChatMessage> _chatMessages = [];
+  final List<ChatMessage> _chatMessages = [];
 
   bool get isLoading => _isLoading;
   List<CropSuggestion> get suggestions => _suggestions;

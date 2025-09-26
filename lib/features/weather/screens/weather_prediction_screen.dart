@@ -34,7 +34,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text('Weather Prediction'),
         backgroundColor: AppTheme.primaryGreen,
@@ -72,7 +72,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.error_outline,
                     size: 64,
                     color: AppTheme.errorRed,
@@ -135,7 +135,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: AppTheme.primaryGreen,
                 size: 20,
@@ -282,7 +282,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.warning_outlined,
                 color: AppTheme.warningOrange,
                 size: 24,
@@ -479,7 +479,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
             height: 200,
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -510,8 +510,8 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
                       },
                     ),
                   ),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: true),
                 lineBarsData: [
@@ -522,7 +522,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
                     isCurved: true,
                     color: AppTheme.primaryGreen,
                     barWidth: 3,
-                    dotData: FlDotData(show: true),
+                    dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
                       color: AppTheme.primaryGreen.withOpacity(0.1),
@@ -567,7 +567,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
             height: 200,
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -598,8 +598,8 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
                       },
                     ),
                   ),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: true),
                 lineBarsData: [
@@ -610,7 +610,7 @@ class _WeatherPredictionScreenState extends State<WeatherPredictionScreen> {
                     isCurved: true,
                     color: AppTheme.skyBlue,
                     barWidth: 3,
-                    dotData: FlDotData(show: true),
+                    dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
                       color: AppTheme.skyBlue.withOpacity(0.1),

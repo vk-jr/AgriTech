@@ -200,7 +200,7 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
         LinearProgressIndicator(
           value: value / 100,
           backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
+          valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
         ),
         Text('${value.toInt()}%', style: const TextStyle(fontSize: 10)),
       ],
@@ -388,7 +388,7 @@ class _SoilAnalysisScreenState extends State<SoilAnalysisScreen> {
           ),
           Text(
             analysis.qualityScore.grade,
-            style: TextStyle(
+            style: const TextStyle(
               color: AppTheme.primaryGreen,
               fontWeight: FontWeight.bold,
             ),

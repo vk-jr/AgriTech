@@ -12,7 +12,7 @@ class AIToolsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.aiTools),
         backgroundColor: AppTheme.primaryGreen,
@@ -86,7 +86,7 @@ class AIToolsScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.lightbulb_outline,
                   color: AppTheme.earthYellow,
                   size: 20,
@@ -138,7 +138,7 @@ class AIToolsScreen extends StatelessWidget {
             ),
             child: Text(
               AppLocalizations.of(context)!.popular,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppTheme.primaryGreen,
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -165,7 +165,7 @@ class AIToolsScreen extends StatelessWidget {
             ),
             child: Text(
               AppLocalizations.of(context)!.smart,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppTheme.accentBrown,
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -192,7 +192,7 @@ class AIToolsScreen extends StatelessWidget {
             ),
             child: Text(
               AppLocalizations.of(context)!.newLabel,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppTheme.errorRed,
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -249,7 +249,7 @@ class AIToolsScreen extends StatelessWidget {
                 width: 1,
               ),
             ),
-            child: Text(
+            child: const Text(
               'NEW',
               style: TextStyle(
                 color: AppTheme.accentBrown,
@@ -296,7 +296,7 @@ class AIToolsScreen extends StatelessWidget {
                           ),
                     ),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.arrow_forward_ios,
                     color: AppTheme.skyBlue,
                     size: 16,

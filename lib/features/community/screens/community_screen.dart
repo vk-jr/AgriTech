@@ -160,7 +160,7 @@ class _CommunityScreenState extends State<CommunityScreen>
 
   Widget _buildCategoryFilter(BuildContext context, CommunityProvider provider) {
     return DropdownButtonFormField<PostCategory?>(
-      value: provider.selectedCategory,
+      initialValue: provider.selectedCategory,
       decoration: const InputDecoration(
         labelText: 'Category',
         prefixIcon: Icon(Icons.category),
@@ -740,7 +740,7 @@ class _CommunityScreenState extends State<CommunityScreen>
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<PostCategory>(
-                value: selectedCategory,
+                initialValue: selectedCategory,
                 decoration: const InputDecoration(labelText: 'Category'),
                 items: PostCategory.values.map((category) {
                   return DropdownMenuItem(
@@ -752,7 +752,7 @@ class _CommunityScreenState extends State<CommunityScreen>
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<PostType>(
-                value: selectedType,
+                initialValue: selectedType,
                 decoration: const InputDecoration(labelText: 'Type'),
                 items: PostType.values.map((type) {
                   return DropdownMenuItem(

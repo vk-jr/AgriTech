@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../shared/widgets/custom_card.dart';
-import '../../../shared/widgets/custom_button.dart';
 import '../providers/community_provider.dart';
 import '../../../core/models/community_model.dart';
 
@@ -307,9 +306,9 @@ class _ForumPostDetailScreenState extends State<ForumPostDetailScreen> {
                 color: Colors.green.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(Icons.check_circle, color: Colors.green, size: 16),
                   SizedBox(width: 4),
                   Text(

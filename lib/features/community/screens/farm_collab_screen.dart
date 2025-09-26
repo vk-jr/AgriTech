@@ -99,7 +99,7 @@ class _FarmCollabScreenState extends State<FarmCollabScreen> with SingleTickerPr
             children: [
               Icon(MdiIcons.handshake, color: AppTheme.primaryGreen),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: Text(
                   'Ready to Collaborate?',
                   style: TextStyle(
@@ -111,7 +111,7 @@ class _FarmCollabScreenState extends State<FarmCollabScreen> with SingleTickerPr
               Switch(
                 value: preference.isOpenForCollaboration,
                 onChanged: (_) => provider.toggleCollaborationAvailability(),
-                activeColor: AppTheme.primaryGreen,
+                activeThumbColor: AppTheme.primaryGreen,
               ),
             ],
           ),
@@ -218,7 +218,7 @@ class _FarmCollabScreenState extends State<FarmCollabScreen> with SingleTickerPr
                 backgroundColor: AppTheme.primaryGreen.withOpacity(0.2),
                 child: Text(
                   collab.ownerAvatar,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppTheme.primaryGreen,
                     fontWeight: FontWeight.bold,
                   ),
@@ -300,7 +300,7 @@ class _FarmCollabScreenState extends State<FarmCollabScreen> with SingleTickerPr
                 ),
                 child: Text(
                   context.read<FarmCollabProvider>().getCollabTypeDisplayName(collab.type),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppTheme.primaryGreen,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -311,7 +311,7 @@ class _FarmCollabScreenState extends State<FarmCollabScreen> with SingleTickerPr
               if (collab.budget != null)
                 Text(
                   '₹${collab.budget!.toStringAsFixed(0)}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppTheme.primaryGreen,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

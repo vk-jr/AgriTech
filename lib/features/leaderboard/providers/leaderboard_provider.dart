@@ -8,7 +8,7 @@ class LeaderboardProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   LeaderboardTimeframe _selectedTimeframe = LeaderboardTimeframe.allTime;
-  String _userLocation = 'Kerala, India'; // This would come from user profile
+  final String _userLocation = 'Kerala, India'; // This would come from user profile
 
   // Getters
   List<LeaderboardEntry> get globalLeaderboard => _globalLeaderboard;

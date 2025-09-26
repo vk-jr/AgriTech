@@ -235,7 +235,7 @@ class _ARViewScreenState extends State<ARViewScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.eco,
               color: Colors.white,
               size: 24,

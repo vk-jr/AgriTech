@@ -99,9 +99,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
       builder: (context, provider, child) {
         final topEntries = provider.globalLeaderboard.take(3).toList();
         if (topEntries.length < 3) {
-          return Container(
+          return const SizedBox(
             height: 200,
-            child: const Center(
+            child: Center(
               child: CircularProgressIndicator(color: Colors.white),
             ),
           );
@@ -195,7 +195,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
               child: Center(
                 child: Text(
                   entry.userName.substring(0, 1).toUpperCase(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppTheme.primaryGreen,
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
@@ -233,7 +233,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
         
         // Points
         Text(
-          '${_formatNumber(entry.points)}',
+          _formatNumber(entry.points),
           style: const TextStyle(
             color: Colors.white70,
             fontSize: 12,
@@ -328,7 +328,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                 children: [
                   Icon(MdiIcons.mapMarker, color: AppTheme.primaryGreen, size: 16),
                   const SizedBox(width: 8),
-                  Text(
+                  const Text(
                     'Kerala, India',
                     style: TextStyle(
                       color: AppTheme.primaryGreen,
@@ -383,7 +383,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
             child: Center(
               child: Text(
                 '$displayRank',
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppTheme.primaryGreen,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
@@ -399,7 +399,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
             backgroundColor: AppTheme.primaryGreen.withOpacity(0.2),
             child: Text(
               entry.userName.substring(0, 1).toUpperCase(),
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppTheme.primaryGreen,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -454,7 +454,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              '${_formatNumber(entry.points)}',
+              _formatNumber(entry.points),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

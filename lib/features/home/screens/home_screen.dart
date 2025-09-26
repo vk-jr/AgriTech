@@ -7,7 +7,6 @@ import '../providers/dashboard_provider.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../weather/providers/weather_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
-import '../../../shared/widgets/custom_button.dart';
 import '../../../shared/widgets/plant_decoration.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: RefreshIndicator(
         onRefresh: () async {
           await context.read<DashboardProvider>().refreshData();
@@ -187,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 bottom: 25,
                 left: 0,
                 right: 0,
-                child: Container(
+                child: SizedBox(
                   height: 30,
                   child: CustomPaint(
                     size: Size(MediaQuery.of(context).size.width, 30),
@@ -383,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: AppTheme.primaryGreen,
                 size: 20,
@@ -443,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
               if (weatherProvider.isLoadingLocation) ...[
                 const SizedBox(width: 12),
-                SizedBox(
+                const SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(

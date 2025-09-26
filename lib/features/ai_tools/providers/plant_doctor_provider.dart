@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../core/models/plant_disease_model.dart';
 
 class ChatMessage {
@@ -20,13 +21,13 @@ class ChatMessage {
 }
 
 class PlantDoctorProvider extends ChangeNotifier {
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isAnalyzing = false;
   DiagnosisResult? _diagnosisResult;
   String? _errorMessage;
   XFile? _selectedImage;
   List<DiagnosisResult> _diagnosisHistory = [];
-  List<ChatMessage> _chatMessages = [];
+  final List<ChatMessage> _chatMessages = [];
 
   bool get isLoading => _isLoading;
   bool get isAnalyzing => _isAnalyzing;
@@ -48,7 +49,10 @@ class PlantDoctorProvider extends ChangeNotifier {
 
   Future<String?> _sendImageToWebhook(XFile image) async {
     try {
-      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook/plantDoctor';
+      final String webhookUrl = dotenv.env['WEBHOOK_URL'] ?? '';
+      if (webhookUrl.isEmpty) {
+        throw Exception('Webhook URL not found in environment variables');
+      }
       
       var request = http.MultipartRequest('POST', Uri.parse(webhookUrl));
       

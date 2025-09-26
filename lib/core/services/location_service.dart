@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LocationService {
   // Check if location services are enabled and permissions are granted
@@ -203,7 +204,10 @@ class LocationService {
   // Enhanced location resolution using OpenRouter API
   Future<String?> _getEnhancedLocationInfo(double latitude, double longitude) async {
     try {
-      const String apiKey = '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';
+      final String apiKey = dotenv.env['OPENROUTER_API_KEY'] ?? '';
+      if (apiKey.isEmpty) {
+        throw Exception('OpenRouter API key not found');
+      }
       
       final response = await http.post(
         Uri.parse('https://openrouter.ai/api/v1/chat/completions'),

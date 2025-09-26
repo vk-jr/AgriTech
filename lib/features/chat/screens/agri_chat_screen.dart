@@ -373,7 +373,7 @@ class _AgriChatScreenState extends State<AgriChatScreen> with SingleTickerProvid
                         ),
                         child: Text(
                           channel.category,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppTheme.skyBlue,
                             fontSize: 10,
                             fontWeight: FontWeight.w500,

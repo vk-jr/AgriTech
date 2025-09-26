@@ -56,7 +56,7 @@ class PlantDecoration extends StatelessWidget {
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
           // Fallback to custom painted version if image not found
-          return Container(
+          return SizedBox(
             height: height,
             width: width,
             child: CustomPaint(
@@ -95,8 +95,8 @@ class PlantPainter extends CustomPainter {
     
     if (isLeft) {
       // Large tropical leaf (green with gradient)
-      final greenGradient = LinearGradient(
-        colors: [const Color(0xFF66BB6A), const Color(0xFF2E7D32)],
+      final greenGradient = const LinearGradient(
+        colors: [Color(0xFF66BB6A), Color(0xFF2E7D32)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -126,8 +126,8 @@ class PlantPainter extends CustomPainter {
       canvas.drawPath(path, paint);
 
       // Coral/Pink leaf
-      final pinkGradient = LinearGradient(
-        colors: [const Color(0xFFFF8A65), const Color(0xFFD84315)],
+      final pinkGradient = const LinearGradient(
+        colors: [Color(0xFFFF8A65), Color(0xFFD84315)],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -158,8 +158,8 @@ class PlantPainter extends CustomPainter {
       canvas.drawPath(path, paint);
 
       // Yellow/Orange accent leaves
-      final yellowGradient = LinearGradient(
-        colors: [const Color(0xFFFFD54F), const Color(0xFFFF8F00)],
+      final yellowGradient = const LinearGradient(
+        colors: [Color(0xFFFFD54F), Color(0xFFFF8F00)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -210,8 +210,8 @@ class PlantPainter extends CustomPainter {
     } else {
       // Right side - mirrored version with different arrangement
       // Large tropical leaf (green with gradient)
-      final greenGradient = LinearGradient(
-        colors: [const Color(0xFF66BB6A), const Color(0xFF2E7D32)],
+      final greenGradient = const LinearGradient(
+        colors: [Color(0xFF66BB6A), Color(0xFF2E7D32)],
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -241,8 +241,8 @@ class PlantPainter extends CustomPainter {
       canvas.drawPath(path, paint);
 
       // Coral/Pink leaf
-      final pinkGradient = LinearGradient(
-        colors: [const Color(0xFFFF8A65), const Color(0xFFD84315)],
+      final pinkGradient = const LinearGradient(
+        colors: [Color(0xFFFF8A65), Color(0xFFD84315)],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -273,8 +273,8 @@ class PlantPainter extends CustomPainter {
       canvas.drawPath(path, paint);
 
       // Yellow/Orange accent leaves
-      final yellowGradient = LinearGradient(
-        colors: [const Color(0xFFFFD54F), const Color(0xFFFF8F00)],
+      final yellowGradient = const LinearGradient(
+        colors: [Color(0xFFFFD54F), Color(0xFFFF8F00)],
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));

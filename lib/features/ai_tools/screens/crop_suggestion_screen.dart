@@ -280,7 +280,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: _landSizeController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Enter land size in acres',
             prefixIcon: Icon(Icons.landscape),
             suffixText: 'acres',
@@ -317,9 +317,9 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: _budgetController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Enter your budget',
-            prefixIcon: const Icon(Icons.currency_rupee),
+            prefixIcon: Icon(Icons.currency_rupee),
             suffixText: '₹',
           ),
           keyboardType: TextInputType.number,
@@ -389,7 +389,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             color: AppTheme.errorRed,
             size: 20,
@@ -398,7 +398,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppTheme.errorRed,
                 fontWeight: FontWeight.w500,
               ),
@@ -433,7 +433,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.check_circle,
                 color: AppTheme.primaryGreen,
                 size: 28,
@@ -649,7 +649,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.lightbulb_outline,
                     size: 16,
                     color: AppTheme.earthYellow,
@@ -777,7 +777,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
+        const SizedBox(
           width: 16,
           height: 16,
           child: CircularProgressIndicator(
@@ -883,7 +883,7 @@ class _CropSuggestionScreenState extends State<CropSuggestionScreen> {
                 ),
                 child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(

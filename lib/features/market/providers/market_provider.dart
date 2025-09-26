@@ -5,8 +5,8 @@ import '../../../core/models/market_analysis_model.dart';
 class MarketProvider extends ChangeNotifier {
   List<Product> _products = [];
   List<Product> _filteredProducts = [];
-  List<CartItem> _cartItems = [];
-  List<Order> _orders = [];
+  final List<CartItem> _cartItems = [];
+  final List<Order> _orders = [];
   List<MarketAnalysis> _marketAnalysis = [];
   List<MarketInsight> _marketInsights = [];
   bool _isLoading = false;

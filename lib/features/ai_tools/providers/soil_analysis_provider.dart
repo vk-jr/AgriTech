@@ -61,7 +61,7 @@ class SoilAnalysisProvider extends ChangeNotifier {
     final random = DateTime.now().millisecondsSinceEpoch;
     
     return SoilAnalysisResult(
-      id: 'analysis_${random}',
+      id: 'analysis_$random',
       farmId: farmId ?? 'farm_default',
       location: location,
       analyzedAt: DateTime.now(),

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class WeatherService {
-  static const String _apiKey = 'd6e228033e434d62e734595a859b2bab';
+  static String get _apiKey => dotenv.env['OPENWEATHERMAP_API_KEY'] ?? '';
   static const String _baseUrl = 'https://api.openweathermap.org/data/2.5';
 
   // Get current weather by coordinates
@@ -159,7 +161,7 @@ class WeatherService {
         alerts.add(WeatherAlert(
           id: 'humidity_high_${DateTime.now().millisecondsSinceEpoch}',
           title: 'High Humidity Alert',
-          description: 'Humidity is ${humidity}%. Monitor for fungal diseases and improve ventilation.',
+          description: 'Humidity is $humidity%. Monitor for fungal diseases and improve ventilation.',
           severity: AlertSeverity.medium,
           type: 'humidity',
         ));
