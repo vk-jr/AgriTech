@@ -8,6 +8,7 @@ import '../../auth/providers/auth_provider.dart';
 import '../../weather/providers/weather_provider.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
+import '../../../shared/widgets/plant_decoration.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -72,12 +73,53 @@ class _HomeScreenState extends State<HomeScreen> {
       pinned: true,
       backgroundColor: AppTheme.primaryGreen,
       flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          AppLocalizations.of(context)!.agritechDashboard,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+        centerTitle: true,
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const PlantDecoration(
+                height: 25,
+                width: 20,
+                showRight: false,
+                imageVariant: 1,
               ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Welcome to',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white70,
+                            fontSize: 10,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      'AgriTech',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              const PlantDecoration(
+                height: 25,
+                width: 20,
+                showLeft: false,
+                imageVariant: 2,
+              ),
+            ],
+          ),
         ),
         background: Container(
           decoration: const BoxDecoration(
@@ -86,6 +128,52 @@ class _HomeScreenState extends State<HomeScreen> {
               end: Alignment.bottomRight,
               colors: [AppTheme.primaryGreen, AppTheme.darkGreen],
             ),
+          ),
+          child: Stack(
+            children: [
+              // Background plant decorations
+              const Positioned(
+                top: 15,
+                left: -5,
+                child: PlantDecoration(
+                  height: 45,
+                  width: 35,
+                  showRight: false,
+                  imageVariant: 1,
+                ),
+              ),
+              const Positioned(
+                top: 15,
+                right: -5,
+                child: PlantDecoration(
+                  height: 45,
+                  width: 35,
+                  showLeft: false,
+                  imageVariant: 2,
+                ),
+              ),
+              // Additional decorative elements
+              Positioned(
+                top: 35,
+                left: MediaQuery.of(context).size.width * 0.3,
+                child: const PlantDecoration(
+                  height: 30,
+                  width: 25,
+                  showRight: false,
+                  imageVariant: 1,
+                ),
+              ),
+              Positioned(
+                top: 35,
+                right: MediaQuery.of(context).size.width * 0.3,
+                child: const PlantDecoration(
+                  height: 30,
+                  width: 25,
+                  showLeft: false,
+                  imageVariant: 2,
+                ),
+              ),
+            ],
           ),
         ),
       ),

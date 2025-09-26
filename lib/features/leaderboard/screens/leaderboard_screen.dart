@@ -16,8 +16,6 @@ class LeaderboardScreen extends StatefulWidget {
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final _searchController = TextEditingController();
-  String _searchQuery = '';
 
   @override
   void initState() {
@@ -31,17 +29,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
   @override
   void dispose() {
     _tabController.dispose();
-    _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.primaryGreen,
       appBar: AppBar(
-        title: const Text('Leaderboard'),
+        title: const Text('Leaderboard', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: AppTheme.primaryGreen,
         foregroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.go('/profile'),
@@ -49,73 +48,45 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
         actions: [
           Consumer<LeaderboardProvider>(
             builder: (context, provider, child) {
-              return PopupMenuButton<LeaderboardTimeframe>(
-                icon: const Icon(Icons.filter_list, color: Colors.white),
-                onSelected: (timeframe) => provider.updateTimeframe(timeframe),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: LeaderboardTimeframe.weekly,
-                    child: Row(
-                      children: [
-                        Icon(MdiIcons.calendarWeek),
-                        const SizedBox(width: 8),
-                        const Text('This Week'),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: LeaderboardTimeframe.monthly,
-                    child: Row(
-                      children: [
-                        Icon(MdiIcons.calendarMonth),
-                        const SizedBox(width: 8),
-                        const Text('This Month'),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: LeaderboardTimeframe.allTime,
-                    child: Row(
-                      children: [
-                        Icon(MdiIcons.calendarClock),
-                        const SizedBox(width: 8),
-                        const Text('All Time'),
-                      ],
-                    ),
-                  ),
-                ],
+              return Container(
+                margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(MdiIcons.calendarMonth, color: Colors.white, size: 16),
+                    const SizedBox(width: 4),
+                    const Text('MONTHLY', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                  ],
+                ),
               );
             },
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          tabs: [
-            Tab(
-              text: 'Global',
-              icon: Icon(MdiIcons.earth),
-            ),
-            Tab(
-              text: 'Local',
-              icon: Icon(MdiIcons.mapMarker),
-            ),
-          ],
-        ),
       ),
       body: Column(
         children: [
-          _buildSearchBar(),
-          _buildStatsSection(),
+          _buildTopSection(),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildGlobalTab(),
-                _buildLocalTab(),
-              ],
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+              ),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildGlobalTab(),
+                  _buildLocalTab(),
+                ],
+              ),
             ),
           ),
         ],
@@ -123,74 +94,60 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     );
   }
 
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      color: Theme.of(context).colorScheme.surface,
-      child: TextField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          hintText: 'Search farmers...',
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: _searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _searchQuery = '';
-                    });
-                  },
-                )
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        onChanged: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _buildStatsSection() {
+  Widget _buildTopSection() {
     return Consumer<LeaderboardProvider>(
       builder: (context, provider, child) {
-        if (provider.stats == null) return const SizedBox.shrink();
-        
-        final stats = provider.stats!;
+        final topEntries = provider.globalLeaderboard.take(3).toList();
+        if (topEntries.length < 3) {
+          return Container(
+            height: 200,
+            child: const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+          );
+        }
+
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
+          padding: const EdgeInsets.all(20),
+          child: Column(
             children: [
-              Expanded(
-                child: _buildStatCard(
-                  'Total Users',
-                  '${_formatNumber(stats.totalUsers)}',
-                  MdiIcons.accountGroup,
-                  AppTheme.primaryGreen,
+              // Tab selector
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  labelColor: AppTheme.primaryGreen,
+                  unselectedLabelColor: Colors.white,
+                  labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+                  tabs: const [
+                    Tab(text: 'GLOBAL'),
+                    Tab(text: 'LOCAL'),
+                  ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _buildStatCard(
-                  'Active Users',
-                  '${_formatNumber(stats.activeUsers)}',
-                  MdiIcons.accountCheck,
-                  AppTheme.skyBlue,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _buildStatCard(
-                  'Top Region',
-                  stats.topRegion,
-                  MdiIcons.trophy,
-                  AppTheme.earthYellow,
-                ),
+              const SizedBox(height: 30),
+              
+              // Podium
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // 2nd place
+                  _buildPodiumItem(topEntries[1], 2, 80),
+                  const SizedBox(width: 20),
+                  // 1st place
+                  _buildPodiumItem(topEntries[0], 1, 100),
+                  const SizedBox(width: 20),
+                  // 3rd place
+                  _buildPodiumItem(topEntries[2], 3, 60),
+                ],
               ),
             ],
           ),
@@ -199,38 +156,118 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: color,
+  Widget _buildPodiumItem(LeaderboardEntry entry, int position, double height) {
+    Color podiumColor;
+    IconData crownIcon;
+    
+    switch (position) {
+      case 1:
+        podiumColor = const Color(0xFFFFD700); // Gold
+        crownIcon = MdiIcons.crown;
+        break;
+      case 2:
+        podiumColor = const Color(0xFFC0C0C0); // Silver
+        crownIcon = MdiIcons.medal;
+        break;
+      case 3:
+        podiumColor = const Color(0xFFCD7F32); // Bronze
+        crownIcon = MdiIcons.medal;
+        break;
+      default:
+        podiumColor = Colors.grey;
+        crownIcon = MdiIcons.numeric;
+    }
+
+    return Column(
+      children: [
+        // Avatar with crown
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: podiumColor, width: 3),
+              ),
+              child: Center(
+                child: Text(
+                  entry.userName.substring(0, 1).toUpperCase(),
+                  style: TextStyle(
+                    color: AppTheme.primaryGreen,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+            ),
+            if (position == 1)
+              Positioned(
+                top: -10,
+                left: 15,
+                child: Icon(
+                  crownIcon,
+                  color: podiumColor,
+                  size: 30,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        
+        // Name
+        Text(
+          entry.userName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 4),
+        
+        // Points
+        Text(
+          '${_formatNumber(entry.points)}',
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 8),
+        
+        // Podium base
+        Container(
+          width: 60,
+          height: height,
+          decoration: BoxDecoration(
+            color: podiumColor.withOpacity(0.3),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+            border: Border.all(color: podiumColor, width: 2),
+          ),
+          child: Center(
+            child: Text(
+              '$position',
+              style: TextStyle(
+                color: podiumColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
             ),
           ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey[600],
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
+
 
   Widget _buildGlobalTab() {
     return Consumer<LeaderboardProvider>(
@@ -239,19 +276,26 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
           return const Center(child: CircularProgressIndicator());
         }
 
-        final entries = provider.searchEntries(LeaderboardType.global, _searchQuery);
+        final entries = provider.globalLeaderboard.skip(3).toList(); // Skip top 3 (shown in podium)
 
         if (entries.isEmpty) {
           return _buildEmptyState('No farmers found', 'Try adjusting your search criteria');
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: entries.length,
-          itemBuilder: (context, index) {
-            final entry = entries[index];
-            return _buildLeaderboardCard(entry, index);
-          },
+        return Column(
+          children: [
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: entries.length,
+                itemBuilder: (context, index) {
+                  final entry = entries[index];
+                  return _buildModernLeaderboardCard(entry, index + 4); // Start from rank 4
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -264,7 +308,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
           return const Center(child: CircularProgressIndicator());
         }
 
-        final entries = provider.searchEntries(LeaderboardType.local, _searchQuery);
+        final entries = provider.localLeaderboard.skip(3).toList(); // Skip top 3 (shown in podium)
 
         if (entries.isEmpty) {
           return _buildEmptyState('No local farmers found', 'Try adjusting your search criteria');
@@ -273,22 +317,23 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
         return Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppTheme.primaryGreen.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.primaryGreen.withOpacity(0.3)),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(MdiIcons.mapMarker, color: AppTheme.primaryGreen),
+                  Icon(MdiIcons.mapMarker, color: AppTheme.primaryGreen, size: 16),
                   const SizedBox(width: 8),
                   Text(
-                    'Showing farmers in ${provider.userLocation}',
+                    'Kerala, India',
                     style: TextStyle(
                       color: AppTheme.primaryGreen,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
                   ),
                 ],
@@ -300,7 +345,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                 itemCount: entries.length,
                 itemBuilder: (context, index) {
                   final entry = entries[index];
-                  return _buildLeaderboardCard(entry, index);
+                  return _buildModernLeaderboardCard(entry, index + 4); // Start from rank 4
                 },
               ),
             ),
@@ -310,176 +355,118 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     );
   }
 
-  Widget _buildLeaderboardCard(LeaderboardEntry entry, int index) {
-    Color rankColor;
-    IconData rankIcon;
-    
-    switch (entry.rank) {
-      case 1:
-        rankColor = Colors.amber;
-        rankIcon = MdiIcons.trophy;
-        break;
-      case 2:
-        rankColor = Colors.grey[400]!;
-        rankIcon = MdiIcons.medal;
-        break;
-      case 3:
-        rankColor = Colors.brown[400]!;
-        rankIcon = MdiIcons.medal;
-        break;
-      default:
-        rankColor = Colors.grey[600]!;
-        rankIcon = MdiIcons.numeric;
-    }
-
-    return CustomCard(
+  Widget _buildModernLeaderboardCard(LeaderboardEntry entry, int displayRank) {
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // Rank
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: rankColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: rankColor),
-              ),
-              child: Center(
-                child: entry.rank <= 3
-                    ? Icon(rankIcon, color: rankColor, size: 20)
-                    : Text(
-                        '${entry.rank}',
-                        style: TextStyle(
-                          color: rankColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-              ),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Rank
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryGreen.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
             ),
-            const SizedBox(width: 16),
-            
-            // Avatar
-            CircleAvatar(
-              radius: 25,
-              backgroundColor: AppTheme.primaryGreen.withOpacity(0.2),
+            child: Center(
               child: Text(
-                entry.userName.substring(0, 1).toUpperCase(),
+                '$displayRank',
                 style: TextStyle(
                   color: AppTheme.primaryGreen,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 14,
                 ),
               ),
             ),
-            const SizedBox(width: 16),
-            
-            // User Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          entry.userName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      if (entry.isVerified)
-                        Icon(
-                          MdiIcons.checkDecagram,
-                          color: Colors.blue,
-                          size: 16,
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    entry.location,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${entry.farmType} • ${entry.farmSize} acres',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _buildMetric(MdiIcons.post, entry.postsCount.toString()),
-                      const SizedBox(width: 12),
-                      _buildMetric(MdiIcons.thumbUp, entry.helpfulCount.toString()),
-                      const SizedBox(width: 12),
-                      _buildMetric(MdiIcons.shoppingOutline, entry.ordersCount.toString()),
-                    ],
-                  ),
-                ],
+          ),
+          const SizedBox(width: 12),
+          
+          // Avatar
+          CircleAvatar(
+            radius: 20,
+            backgroundColor: AppTheme.primaryGreen.withOpacity(0.2),
+            child: Text(
+              entry.userName.substring(0, 1).toUpperCase(),
+              style: TextStyle(
+                color: AppTheme.primaryGreen,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
-            
-            // Points
-            Column(
+          ),
+          const SizedBox(width: 12),
+          
+          // User Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryGreen.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${_formatNumber(entry.points)} pts',
-                    style: TextStyle(
-                      color: AppTheme.primaryGreen,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        entry.userName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
+                    if (entry.isVerified)
+                      Icon(
+                        MdiIcons.checkDecagram,
+                        color: Colors.blue,
+                        size: 16,
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _formatTimeAgo(entry.lastActive),
+                  entry.location,
                   style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 10,
+                    color: Colors.grey[600],
+                    fontSize: 14,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          
+          // Points
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryGreen,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '${_formatNumber(entry.points)}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildMetric(IconData icon, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: Colors.grey[500]),
-        const SizedBox(width: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: Colors.grey[500],
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildEmptyState(String title, String subtitle) {
     return Center(
@@ -523,16 +510,4 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     }
   }
 
-  String _formatTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-    
-    if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else {
-      return '${difference.inMinutes}m ago';
-    }
-  }
 }
