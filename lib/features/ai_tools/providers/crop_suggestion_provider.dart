@@ -153,7 +153,7 @@ class CropSuggestionProvider extends ChangeNotifier {
 
   Future<String?> _sendDataToWebhook() async {
     try {
-      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook-test/cropAssistant';
+      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook/cropAssistant';
       
       final requestData = {
         'soilType': _soilType,

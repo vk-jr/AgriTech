@@ -48,7 +48,7 @@ class PlantDoctorProvider extends ChangeNotifier {
 
   Future<String?> _sendImageToWebhook(XFile image) async {
     try {
-      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook-test/plantDoctor';
+      const String webhookUrl = 'https://vxsm321.app.n8n.cloud/webhook/plantDoctor';
       
       var request = http.MultipartRequest('POST', Uri.parse(webhookUrl));
       
