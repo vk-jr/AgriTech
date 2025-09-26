@@ -11,6 +11,7 @@ import '../../features/ai_tools/screens/plant_doctor_screen.dart';
 import '../../features/ai_tools/screens/ar_view_screen.dart';
 import '../../features/ai_tools/screens/satellite_analysis_screen.dart';
 import '../../features/ai_tools/screens/plant_recommendation_screen.dart';
+import '../../features/ai_tools/screens/soil_analysis_screen.dart';
 import '../../features/market/screens/market_screen.dart';
 import '../../features/market/screens/product_detail_screen.dart';
 import '../../features/community/screens/community_screen.dart';
@@ -120,6 +121,15 @@ class AppRouter {
                   const SatelliteAnalysisScreen(),
                   state,
                   name: 'satellite-analysis',
+                ),
+              ),
+              GoRoute(
+                path: 'soil-analysis',
+                name: 'soil-analysis',
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const SoilAnalysisScreen(),
+                  state,
+                  name: 'soil-analysis',
                 ),
               ),
             ],

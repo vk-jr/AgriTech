@@ -11,6 +11,7 @@ import 'features/auth/providers/auth_provider.dart';
 import 'features/home/providers/dashboard_provider.dart';
 import 'features/ai_tools/providers/crop_suggestion_provider.dart';
 import 'features/ai_tools/providers/plant_doctor_provider.dart';
+import 'features/ai_tools/providers/soil_analysis_provider.dart';
 import 'features/market/providers/market_provider.dart';
 import 'features/community/providers/community_provider.dart';
 import 'features/profile/providers/profile_provider.dart';
@@ -55,6 +56,7 @@ class AgriTechApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => CropSuggestionProvider()),
         ChangeNotifierProvider(create: (_) => PlantDoctorProvider()),
+        ChangeNotifierProvider(create: (_) => SoilAnalysisProvider()),
         ChangeNotifierProvider(create: (_) => MarketProvider()),
         ChangeNotifierProvider(create: (_) => CommunityProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),

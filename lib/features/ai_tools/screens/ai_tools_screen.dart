@@ -237,14 +237,27 @@ class AIToolsScreen extends StatelessWidget {
           subtitle: AppLocalizations.of(context)!.soilAnalysisDesc,
           icon: MdiIcons.earth,
           iconColor: AppTheme.accentBrown,
-          onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.soilAnalysisComingSoon),
+          onTap: () => context.go('/ai-tools/soil-analysis'),
+          isEnabled: true,
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppTheme.accentBrown.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppTheme.accentBrown.withOpacity(0.3),
+                width: 1,
               ),
-            );
-          },
-          isEnabled: false,
+            ),
+            child: Text(
+              'NEW',
+              style: TextStyle(
+                color: AppTheme.accentBrown,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ),
       ],
     );
