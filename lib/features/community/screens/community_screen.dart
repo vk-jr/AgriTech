@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../shared/widgets/custom_card.dart';
 import '../../../shared/widgets/custom_button.dart';
 import '../providers/community_provider.dart';
 import '../../../core/models/community_model.dart';
+import '../../../core/theme/app_theme.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -53,12 +55,19 @@ class _CommunityScreenState extends State<CommunityScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _buildPostsTab(),
-          _buildAlertsTab(),
-          _buildEventsTab(),
+          _buildFarmCollabButton(),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildPostsTab(),
+                _buildAlertsTab(),
+                _buildEventsTab(),
+              ],
+            ),
+          ),
         ],
       ),
       floatingActionButton: _tabController.index == 0
@@ -68,6 +77,21 @@ class _CommunityScreenState extends State<CommunityScreen>
               child: const Icon(Icons.add, color: Colors.white),
             )
           : null,
+    );
+  }
+
+  Widget _buildFarmCollabButton() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: double.infinity,
+        child: CustomButton(
+          text: 'Farm Collaboration',
+          icon: MdiIcons.handshake,
+          onPressed: () => context.go('/community/farm-collab'),
+          backgroundColor: AppTheme.primaryGreen,
+        ),
+      ),
     );
   }
 

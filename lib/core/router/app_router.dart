@@ -16,6 +16,7 @@ import '../../features/market/screens/market_screen.dart';
 import '../../features/market/screens/product_detail_screen.dart';
 import '../../features/community/screens/community_screen.dart';
 import '../../features/community/screens/forum_post_detail_screen.dart';
+import '../../features/community/screens/farm_collab_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/profile/screens/settings_screen.dart';
 import '../../features/weather/screens/weather_prediction_screen.dart';
@@ -171,12 +172,21 @@ class AppRouter {
                 name: 'forum-post-detail',
                 pageBuilder: (context, state) {
                   final postId = state.pathParameters['postId']!;
-                  return PageTransitions.slideFromBottom(
+                  return PageTransitions.slideFromRight(
                     ForumPostDetailScreen(postId: postId),
                     state,
                     name: 'forum-post-detail',
                   );
                 },
+              ),
+              GoRoute(
+                path: 'farm-collab',
+                name: 'farm-collab',
+                pageBuilder: (context, state) => PageTransitions.slideFromRight(
+                  const FarmCollabScreen(),
+                  state,
+                  name: 'farm-collab',
+                ),
               ),
             ],
           ),
